@@ -16,12 +16,12 @@ export const fetchProducts = async ({
   if (inStock === true) params.set("inStock", "true");
 
 
-  const res = await api.get(`/products?${params.toString()}`);
+  const res = await api.get(`/api/v1/products?${params.toString()}`);
   return res.data;
 };
 
 export const fetchProductById = async (id) => {
-  const res = await api.get(`/products/${id}`);
+  const res = await api.get(`/api/v1/products/${id}`);
   return res.data;
 };
 
@@ -29,6 +29,6 @@ export const fetchFilterData = async ({ category = "" } = {}) => {
   const params = new URLSearchParams();
   if (category) params.set("category", category);
 
-  const res = await api.get(`/products/filters?${params.toString()}`);
+  const res = await api.get(`/api/v1/products/filters?${params.toString()}`);
   return res.data.data;
 };
