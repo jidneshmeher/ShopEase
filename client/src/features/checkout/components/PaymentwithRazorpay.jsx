@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createRazorpayOrder, verifyRazorpayPayment } from '../checkoutService.js';
-import Processing from './Processing';
+import Processing from './Processing.jsx';
 import {logger} from "../../../utils/logger.js"
 
 const PaymentWithRazorpay = ({ orderData, onPaymentSuccess, onPaymentError, validateForm }) => {
