@@ -1,148 +1,171 @@
-import { Fragment, useState } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { useLocation, useNavigate } from 'react-router-dom'
+import React, { useState, useRef, useEffect } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../features/auth/authSlice";
+import useAuth from "../features/auth/hooks/useAuth";
+import toast from "react-hot-toast";
+import { FiShoppingCart } from "react-icons/fi";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { CircleUserRound } from "lucide-react";
+import { logger } from "../utils/logger";
 
-const navigation = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'Buy', href: '/buy', current: false },
-  // { name: 'Sell', href: '/sell', current: false },
-  { name: 'About Us', href: '/aboutus', current: false },
-  { name: 'Contact Us', href: '/contactus', current: false },
-]
+const Navbar = () => {
+  const dispatch = useDispatch();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+  const cartItems = useSelector(state => state.cart.items);
+  // const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-export default function NavBar() {
+  const headerRef = useRef(null);
 
-  const nav = useNavigate();
-  const location = useLocation();
-  const un = sessionStorage.getItem('un');
- 
+  // useGSAP(() => {
+  //   gsap.from(".logo, .nav-links a, .right-side", {
+  //     y: -50,
+  //     opacity: 0,
+  //     duration: 0.8,
+  //     delay: 0.3,
+  //     stagger: 0.2,
+  //     ease: "power2.out",
+  //   });
+  // }, {scope:headerRef});
+
+  const handleLogout = () => {
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => {
+        toast.success("Logged out successfully");
+        navigate("/");
+      })
+      .catch((err) => {
+        logger.error("Logout failed:", err);
+        toast.error("Logout failed, please try again");
+      });
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-50">
-      {({ open }) => (
-        <>
-          <div className="px-2 sm:px-6 lg:px-8">
-            <div className="relative flex h-16 items-center justify-between ">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                {/* Mobile menu button*/}
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-black hover:bg-gray-700 hover:text-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                  <span className="absolute -inset-0.5" />
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
-              </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="hidden sm:ml-6 sm:block">
-                  <div className="flex space-x-4">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          location.pathname === item.href ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {item.name}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+    <header 
+      ref={headerRef}
+      className="header h-16 flex justify-between items-center px-8 border-b border-gray-200 sticky top-0 bg-white z-50 shadow-sm"
+    >
 
-              { !un ? <button type="button" className=" mt-2 focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900" onClick={() =>{nav("/login")}}  >Login</button>: null}
+      <div className="logo font-bold text-xl text-black">
+        <Link to="/">SHOPEASE</Link>
+      </div>
 
-                {/* Profile dropdown */}
-                {un ? <Menu as="div" className="relative ml-3">
-                  <div>
-                    <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://img.freepik.com/premium-vector/people-ribbon-logo-modern-leadership-logo-human-charity-logo_327835-2463.jpg"
-                        alt=""
-                      />
-                    </Menu.Button>
-                  </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="/cart"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Your Cart
-                          </a>
-                        )}
-                      </Menu.Item>
-                      {/* <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="/order"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Your order
-                          </a>
-                        )}
-                      </Menu.Item> */}
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-48 text-left  ')}
-                            onClick={ () => { sessionStorage.removeItem('un');  nav("/login"); } }
-                          >
-                            Sign out
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>:null}
-              </div>
-            </div>
-          </div>
+      <nav className="nav-links flex space-x-8 text-base font-semibold">
+        <NavLink
+          to="/products"
+          className={({ isActive }) =>
+            isActive
+              ? "text-black border-b-2 border-black pb-1"
+              : "text-gray-900 hover:text-black"
+          }
+        >
+          Products
+        </NavLink> 
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            isActive
+              ? "text-black border-b-2 border-black pb-1"
+              : "text-gray-900 hover:text-black"
+          }
+        >
+          About Us
+        </NavLink>
+        <NavLink
+          to="/contact"
+          className={({ isActive }) =>
+            isActive
+              ? "text-black border-b-2 border-blue-600 pb-1"
+              : "text-gray-900 hover:text-black"
+          }
+        >
+          Contact Us
+        </NavLink>
+      </nav>
 
-          <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
-                  aria-current={item.current ? 'page' : undefined}
+      <div className="right-side flex items-center space-x-6 relative" ref={dropdownRef}>
+        <Link
+          to="/cart"
+          className="relative text-gray-900 hover:text-black"
+          aria-label="Cart"
+          title="Cart"
+        >
+          <FiShoppingCart size={24} />
+          {/* {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {cartCount}
+            </span>
+          )} */}
+        </Link>
+
+        {user ? (
+          <>
+            <button
+              onClick={() => setDropdownOpen(prev => !prev)}
+              className="w-10 h-10 rounded-full  flex items-center justify-center text-gray-900 hover:text-black font-semibold cursor-pointer select-none"
+              aria-label="User menu"
+            >
+              <CircleUserRound size={28} />
+            </button>
+            {dropdownOpen && (
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-300 rounded shadow-md z-50">
+                <Link
+                  to="/profile"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-            </div>
-          </Disclosure.Panel>
-        </>
-      )}
-    </Disclosure>
-    
-  )
-}
+                  My Profile
+                </Link>
+                <Link
+                  to="/cart"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  My Cart
+                </Link>
+                <Link
+                  to="/orders"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  My Orders
+                </Link>
+                <button
+                  onClick={() => { setDropdownOpen(false); handleLogout(); }}
+                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <Link
+            to="/login"
+            className="bg-blue-600 text-white font-semibold text-base rounded-3xl px-10 py-2 hover:bg-blue-700 transition"
+          >
+            Login
+          </Link>
+        )}
+      </div>
+    </header>
+  );
+};
+
+export default Navbar;
