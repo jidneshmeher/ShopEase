@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/auth/authSlice";
 import useAuth from "../features/auth/hooks/useAuth";
 import toast from "react-hot-toast";
-import { FiShoppingCart } from "react-icons/fi";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
+import { FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { CircleUserRound } from "lucide-react";
 import { logger } from "../utils/logger";
 
@@ -15,23 +13,10 @@ const Navbar = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const cartItems = useSelector(state => state.cart.items);
-  // const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
-  const headerRef = useRef(null);
-
-  // useGSAP(() => {
-  //   gsap.from(".logo, .nav-links a, .right-side", {
-  //     y: -50,
-  //     opacity: 0,
-  //     duration: 0.8,
-  //     delay: 0.3,
-  //     stagger: 0.2,
-  //     ease: "power2.out",
-  //   });
-  // }, {scope:headerRef});
+  const cartItems = useSelector((state) => state.cart.items);
 
   const handleLogout = () => {
     dispatch(logoutUser())
@@ -48,25 +33,27 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
         setDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
-    <header 
-      ref={headerRef}
-      className="header h-16 flex justify-between items-center px-8 border-b border-gray-200 sticky top-0 bg-white z-50 shadow-sm"
-    >
-
+    <header className="header h-16 flex justify-between items-center px-4 sm:px-16 border-b border-gray-200 sticky top-0 bg-white z-50 shadow-sm">
+      {/* Logo */}
       <div className="logo font-bold text-xl text-black">
         <Link to="/">SHOPEASE</Link>
       </div>
 
-      <nav className="nav-links flex space-x-8 text-base font-semibold">
+      {/* Desktop Navigation */}
+      <nav className="hidden md:flex space-x-8 text-base font-semibold">
         <NavLink
           to="/products"
           className={({ isActive }) =>
@@ -76,7 +63,7 @@ const Navbar = () => {
           }
         >
           Products
-        </NavLink> 
+        </NavLink>
         <NavLink
           to="/about"
           className={({ isActive }) =>
@@ -99,7 +86,9 @@ const Navbar = () => {
         </NavLink>
       </nav>
 
-      <div className="right-side flex items-center space-x-6 relative" ref={dropdownRef}>
+      {/* Right Side */}
+      <div className="flex items-center space-x-4 relative" ref={dropdownRef}>
+        {/* Cart */}
         <Link
           to="/cart"
           className="relative text-gray-900 hover:text-black"
@@ -107,18 +96,14 @@ const Navbar = () => {
           title="Cart"
         >
           <FiShoppingCart size={24} />
-          {/* {cartCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-              {cartCount}
-            </span>
-          )} */}
         </Link>
 
+        {/* User Menu / Login */}
         {user ? (
           <>
             <button
-              onClick={() => setDropdownOpen(prev => !prev)}
-              className="w-10 h-10 rounded-full  flex items-center justify-center text-gray-900 hover:text-black font-semibold cursor-pointer select-none"
+              onClick={() => setDropdownOpen((prev) => !prev)}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-gray-900 hover:text-black font-semibold cursor-pointer select-none"
               aria-label="User menu"
             >
               <CircleUserRound size={28} />
@@ -147,7 +132,10 @@ const Navbar = () => {
                   My Orders
                 </Link>
                 <button
-                  onClick={() => { setDropdownOpen(false); handleLogout(); }}
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    handleLogout();
+                  }}
                   className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
                   Logout
@@ -158,12 +146,71 @@ const Navbar = () => {
         ) : (
           <Link
             to="/login"
-            className="bg-blue-600 text-white font-semibold text-base rounded-3xl px-10 py-2 hover:bg-blue-700 transition"
+            className="hidden md:inline-block bg-blue-600 text-white font-semibold text-base rounded-3xl px-6 py-2 hover:bg-blue-700 transition"
           >
             Login
           </Link>
         )}
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-gray-900 hover:text-black"
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
+          aria-label="Mobile menu"
+        >
+          {mobileMenuOpen ? <FiX size={28} /> : <FiMenu size={28} />}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <nav className="absolute top-full left-0 w-full bg-white border-t border-gray-200 shadow-md md:hidden z-40">
+          <div className="flex flex-col px-4 py-4 space-y-2">
+            <NavLink
+              to="/products"
+              onClick={() => setMobileMenuOpen(false)}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-black font-semibold"
+                  : "text-gray-900 hover:text-black"
+              }
+            >
+              Products
+            </NavLink>
+            <NavLink
+              to="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-black font-semibold"
+                  : "text-gray-900 hover:text-black"
+              }
+            >
+              About Us
+            </NavLink>
+            <NavLink
+              to="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-black font-semibold"
+                  : "text-gray-900 hover:text-black"
+              }
+            >
+              Contact Us
+            </NavLink>
+            {!user && (
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="bg-blue-600 text-white font-semibold text-base rounded-3xl px-6 py-2 hover:bg-blue-700 text-center"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+        </nav>
+      )}
     </header>
   );
 };
