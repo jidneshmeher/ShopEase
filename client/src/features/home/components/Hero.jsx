@@ -31,33 +31,44 @@ const Hero = () => {
       className="relative w-full bg-black" 
       style={{ height: 'calc(100vh - 64px)' }}
       >
-      <img src={heroImage} alt="Hero" className="w-full h-full object-cover" />
+      <img src={heroImage} alt="Hero" className=" w-full h-full object-cover" />
       <div
         className="absolute inset-0"
         style={{
           background: 'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%)',
         }}
       />
-      <h1
-        className="absolute top-[23%] left-12 text-white text-[115px] leading-[130px] font-bold max-w-2xl tracking-wide"
-        ref={headingRef}
+      <div 
+        ref={headingRef} 
+        className="absolute z-20 flex w-fit flex-col gap-4 text-left 
+        bottom-4 left-4 lg:left-12 lg:top-1/2 md:-translate-y-1/2"
       >
-        Your Online 
-        <br/>
-        Store for
-        <br/>
-        <Typewriter words={[' Mobiles', ' Laptops', ' Headphones', ' Watches']} />
-      </h1>
-      {/* <p className="absolute top-[55%] left-12 text-white text-xl max-w-lg">
-        Explore the best electronics and gadgets at unbeatable prices.
-      </p> */}
-      <Link
+        <div className="flex flex-col gap-0 max-md:items-start w-full max-w-full px-4 sm:px-6 md:px-12">
+          <p className="m-0 overflow-hidden text-white text-[8vw] sm:text-[6vw] md:text-[5vw] lg:text-[115px] leading-[1.1] font-playfair tracking-wide break-words whitespace-normal">
+            <span className="block animate-appear-from-bottom">FIND</span>
+          </p>
+          <p className="m-0 overflow-hidden text-white text-[8vw] sm:text-[6vw] md:text-[5vw] lg:text-[115px] leading-[1.1] font-playfair tracking-wide break-words whitespace-normal">
+            <span className="block animate-appear-from-bottom">THE BEST</span>
+          </p>
+          <p className="m-0 overflow-hidden text-white text-[8vw] sm:text-[6vw] md:text-[5vw] lg:text-[115px] leading-[1.1] font-playfair tracking-wide break-words whitespace-normal">
+            <span className="block animate-appear-from-bottom">DEALS ON</span>
+          </p>
+          <p className="m-0 overflow-hidden text-white text-[8vw] sm:text-[6vw] md:text-[5vw] lg:text-[115px] leading-[1.1] font-playfair tracking-wide min-w-[50%] sm:min-w-[60%] md:min-w-[80%] break-words whitespace-normal">
+            <span className="block animate-appear-from-bottom">
+              <Typewriter words={['MOBILES', 'LAPTOPS', 'HEADPHONES', 'WATCHES']} />
+            </span>
+          </p>
+        </div>
+
+      </div>
+
+      {/* <Link
         to="/products"
         ref={buttonRef}
         className="absolute top-[72%] left-12 bg-blue-600 font-semibold text-lg text-white px-10 py-3 rounded-3xl hover:bg-blue-700"
       >
         Shop Now
-      </Link>
+      </Link> */}
     </section>
   );
 };

@@ -1,15 +1,19 @@
 import DeviceGroupImg from "../assets/images/about/device-group.png";
 import ServiceDeskImg from "../assets/images/about/service-desk.jpg";
 import AlexaImg from "../assets/images/about/alexa.png";
+import AlexaImgMini from "../assets/images/about/alexa-mini.png";
 import OliviaImg from "../assets/images/about/olivia.png";
+import OliviaImgMini from "../assets/images/about/olivia-mini.png";
 import LiamImg from "../assets/images/about/liam.png";
+import LiamImgMini from "../assets/images/about/liam-mini.png";
 import ElijahImg from "../assets/images/about/elijah.png";  
+import ElijahImgMini from "../assets/images/about/elijah-mini.png";  
 
 export default function AboutUs() {
   return (
     <>
       <div>
-        <div className=" 2xl:mx-auto lg:py-16 lg:px-20 md:py-12 md:px-6 py-9 px-4">
+        <div className="sm:px-16 lg:py-16 md:py-12 py-9 px-4">
           <div className="flex flex-col lg:flex-row justify-between gap-8">
             <div className="w-full lg:w-5/12 flex flex-col justify-center">
               <h1 className="text-3xl lg:text-4xl font-bold leading-9 text-gray-800 pb-4">About ShopEase</h1>
@@ -54,9 +58,10 @@ export default function AboutUs() {
             </div>
             <div className="w-full lg:w-8/12 lg:pt-8">
               <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 lg:gap-4 shadow-lg rounded-md">
-                {[{img: AlexaImg, name: "Alexa"}, {img: OliviaImg, name: "Olivia"}, {img: LiamImg, name: "Liam"}, {img: ElijahImg, name: "Elijah"}].map((member, idx) => (
+                {[{img: [AlexaImg, AlexaImgMini], name: "Alexa"}, {img: [OliviaImg, OliviaImgMini], name: "Olivia"}, {img: [LiamImg,LiamImgMini], name: "Liam"}, {img: [ElijahImg, ElijahImgMini], name: "Elijah"}].map((member, idx) => (
                   <div key={idx} className="p-4 pb-6 flex justify-center flex-col items-center">
-                    <img className="md:block hidden" src={member.img} alt={member.name} />
+                    <img className="md:block hidden" src={member.img[0]} alt={member.name} />
+                    <img className="md:hidden block" src={member.img[1]} alt={member.name} />
                     <p className="font-medium text-xl leading-5 text-gray-800 mt-4">{member.name}</p>
                   </div>
                 ))}

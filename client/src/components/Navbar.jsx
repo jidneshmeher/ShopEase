@@ -62,7 +62,7 @@ const Navbar = () => {
               : "text-gray-900 hover:text-black"
           }
         >
-          Products
+          PRODUCTS
         </NavLink>
         <NavLink
           to="/about"
@@ -72,7 +72,7 @@ const Navbar = () => {
               : "text-gray-900 hover:text-black"
           }
         >
-          About Us
+          ABOUT US
         </NavLink>
         <NavLink
           to="/contact"
@@ -82,7 +82,7 @@ const Navbar = () => {
               : "text-gray-900 hover:text-black"
           }
         >
-          Contact Us
+          CONTACT US
         </NavLink>
       </nav>
 
@@ -148,7 +148,7 @@ const Navbar = () => {
             to="/login"
             className="hidden md:inline-block bg-blue-600 text-white font-semibold text-base rounded-3xl px-6 py-2 hover:bg-blue-700 transition"
           >
-            Login
+            LOGIN
           </Link>
         )}
 
@@ -175,7 +175,7 @@ const Navbar = () => {
                   : "text-gray-900 hover:text-black"
               }
             >
-              Products
+              PRODUCTS
             </NavLink>
             <NavLink
               to="/about"
@@ -186,7 +186,7 @@ const Navbar = () => {
                   : "text-gray-900 hover:text-black"
               }
             >
-              About Us
+              ABOUT US
             </NavLink>
             <NavLink
               to="/contact"
@@ -197,7 +197,7 @@ const Navbar = () => {
                   : "text-gray-900 hover:text-black"
               }
             >
-              Contact Us
+              CONTACT US
             </NavLink>
             {!user && (
               <Link
@@ -205,7 +205,7 @@ const Navbar = () => {
                 onClick={() => setMobileMenuOpen(false)}
                 className="bg-blue-600 text-white font-semibold text-base rounded-3xl px-6 py-2 hover:bg-blue-700 text-center"
               >
-                Login
+                LOGIN
               </Link>
             )}
           </div>

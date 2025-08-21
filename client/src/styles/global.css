@@ -3,9 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Playfair Display', serif;
-  font-variant-numeric: lining-nums;
-  letter-spacing: 0.5px;
+  @apply font-lora;
 }
 
 .toggle-checkbox {

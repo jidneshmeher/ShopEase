@@ -9,6 +9,7 @@ export default {
     extend: {
       fontFamily: {
         playfair: ['"Playfair Display"', 'serif'],
+        lora: ['Lora', 'serif'],
       },
     },
   },

@@ -79,27 +79,23 @@ const Home = () => {
       <Hero />
       <Intro />
       {/* <VideoSection/> */}
-      <section className="py-20 px-6 w-auto mx-auto">
-        <h2 ref={headingRef} className="text-[32px] font-playfair font-normal text-center">
+      <section className="py-20 px-4 sm:px-6 w-full mx-auto">
+        <h2 ref={headingRef} className="text-2xl sm:text-3xl md:text-4xl font-playfair font-normal text-center">
           SHOP BY CATEGORY
         </h2>
-
+        
         <div 
-          className="grid gap-32 sm:grid-cols-2 py-20 overflow-hidden"
+          className="grid gap-8 sm:gap-16 grid-cols-1 sm:grid-cols-2 py-12 md:py-20 overflow-hidden"
           ref={container}
         >
-          {categories.map((cat, index) => (
-            <div
-              className="card"
+          {categories.map((cat) => (
+            <CategoryCard
               key={cat.title}
-            >
-              <CategoryCard
-                title={cat.title}
-                subTitle={cat.subTitle}
-                image={cat.image}
-                link={cat.link}
-              />
-            </div>
+              title={cat.title}
+              subTitle={cat.subTitle}
+              image={cat.image}
+              link={cat.link}
+            />
           ))}
         </div>
       </section>
