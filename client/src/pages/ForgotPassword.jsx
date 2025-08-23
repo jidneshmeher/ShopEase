@@ -22,7 +22,7 @@ export default function ForgotPassword() {
       })
       .finally(() => {
         setSubmitted(true);
-        toast.success("If an account exists, a reset link has been sent to your email.");
+        toast.success("Reset link sent to your email");
       });
   };
 
@@ -68,7 +68,9 @@ export default function ForgotPassword() {
 
       <button
         onClick={() => navigate("/login")}
-        className="mt-6 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 p-3 rounded-lg font-medium flex items-center justify-center gap-2"
+        disabled={loading}
+        className={`mt-6 w-full p-3 rounded-lg font-medium flex items-center justify-center gap-2 
+          ${loading ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-gray-200 hover:bg-gray-300 text-gray-800"}`}
       >
         Back to Login
       </button>
