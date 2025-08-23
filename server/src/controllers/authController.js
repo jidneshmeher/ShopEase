@@ -98,6 +98,9 @@ export const logoutUser = (req, res) => {
 };
 
 export const forgotPassword = asyncHandler(async (req, res, next) => {
+
+  console.log(req.get('origin'))
+
   const { email } = req.body;
 
   const user = await User.findOne({ email });
@@ -108,7 +111,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   const resetToken = user.getResetPasswordToken();
   await user.save({ validateBeforeSave: false });
 
-  const resetUrl = `${process.env.CLIENT_URL}reset-password/${resetToken}`;
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
   try {
     await sendEmail({
