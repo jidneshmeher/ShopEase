@@ -56,6 +56,29 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+export const forgotPasswordUser = createAsyncThunk(
+  "auth/forgotPasswordUser",
+  async (email, { rejectWithValue }) => {
+    try {
+      return await authService.forgotPassword(email);
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Failed to send reset link");
+    }
+  }
+);
+
+export const resetPasswordUser = createAsyncThunk(
+  "auth/resetPasswordUser",
+  async ({ token, password }, { rejectWithValue }) => {
+    try {
+      return await authService.resetPassword(token, password);
+    } catch (error) {
+      console.log(error)
+      return rejectWithValue(error.response?.data?.message || "Failed to reset password");
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -127,7 +150,33 @@ const authSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
+      })
+
+      .addCase(forgotPasswordUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgotPasswordUser.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(forgotPasswordUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(resetPasswordUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resetPasswordUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(resetPasswordUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
+
   },
 });
 

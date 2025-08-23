@@ -19,6 +19,16 @@ export const logout = async () => {
   await api.post("/api/v1/auth/logout");
 };
 
+export const forgotPassword = async (email) => {
+  const res = await api.post("/api/v1/auth/forgot-password", { email });
+  return res.data;
+};
+
+export const resetPassword = async (token, password) => {
+  const res = await api.put(`/api/v1/auth/reset-password/${token}`, { password });
+  return res.data;
+};
+
 export const updateUserProfile = async (userData) => {
   const res = await api.put('/api/v1/users/profile', userData, { withCredentials: true });
   return res.data;

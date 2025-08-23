@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { LogOut, ShoppingBag } from "lucide-react";
+import { FiLogOut, FiShoppingBag  } from "react-icons/fi";
 import { FiShoppingCart } from "react-icons/fi";
-import { CircleUserRound } from "lucide-react";
+import { LuCircleUserRound } from "react-icons/lu";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { logoutUser, updateUser } from "../features/auth/authSlice";
@@ -77,7 +77,7 @@ export function ProfileCard({ user }) {
   return (
     <div className="bg-white shadow-md rounded-2xl p-6 flex flex-col md:flex-row items-center md:items-start gap-6">
       <div className="w-24 h-24 flex items-center justify-center rounded-full">
-        <CircleUserRound size={96} />
+        <LuCircleUserRound size={96} />
       </div>
 
       <div className="flex-1 w-full">
@@ -203,7 +203,7 @@ export function ProfileCard({ user }) {
 
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
           <ActionCard
-            icon={<ShoppingBag size={22} />}
+            icon={<FiShoppingBag size={22} />}
             label="Orders"
             onClick={() => handleActionClick("orders")}
           />
@@ -213,7 +213,7 @@ export function ProfileCard({ user }) {
             onClick={() => handleActionClick("cart")}
           />
           <ActionCard
-            icon={<LogOut size={22} />}
+            icon={<FiLogOut size={22} />}
             label="Logout"
             danger
             onClick={() => handleActionClick("logout")}

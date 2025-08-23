@@ -16,7 +16,6 @@
     "date-fns": "^4.1.0",
     "gsap": "^3.13.0",
     "libphonenumber-js": "^1.12.12",
-    "lucide-react": "^0.539.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.6.0",

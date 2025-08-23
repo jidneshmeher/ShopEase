@@ -17,13 +17,13 @@ const Hero = () => {
       delay: 0.8,
       ease: "power2.out",
     });
-    gsap.from(buttonRef.current, {
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      delay: 1,
-      ease: "power2.out",
-    });
+    // gsap.from(buttonRef.current, {
+    //   y: 30,
+    //   opacity: 0,
+    //   duration: 0.8,
+    //   delay: 1,
+    //   ease: "power2.out",
+    // });
   }, []);
 
   return (

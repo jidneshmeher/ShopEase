@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { loginUser } from "../features/auth/authSlice";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -62,13 +63,19 @@ export default function Login() {
               id="password"
               name="password"
               placeholder="••••••••"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#2563eb] focus:border-[#2563eb] block w-full p-2.5"
+              className="bg-gray-50 border border-gray-300 mb-2 text-gray-900 sm:text-sm rounded-lg focus:ring-[#2563eb] focus:border-[#2563eb] block w-full p-2.5"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
             />
           </div>
+
+          {/* Forgot Password Link */}
+          <Link to="/forgot-password" className="text-sm  text-[#2563eb] hover:underline dark:text-[#3b82f6]">
+            Forgot Password?
+          </Link>
+
           <button
             type="submit"
             disabled={false}
@@ -76,6 +83,7 @@ export default function Login() {
           >
             Sign in
           </button>
+
           <p className="text-sm text-center font-light text-gray-500 dark:text-gray-400">
             Don’t have an account yet?{" "}
             <a

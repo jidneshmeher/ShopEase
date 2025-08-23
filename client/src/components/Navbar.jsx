@@ -5,7 +5,7 @@ import { logoutUser } from "../features/auth/authSlice";
 import useAuth from "../features/auth/hooks/useAuth";
 import toast from "react-hot-toast";
 import { FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
-import { CircleUserRound } from "lucide-react";
+import { LuCircleUserRound } from "react-icons/lu";
 import { logger } from "../utils/logger";
 
 const Navbar = () => {
@@ -106,7 +106,7 @@ const Navbar = () => {
               className="w-10 h-10 rounded-full flex items-center justify-center text-gray-900 hover:text-black font-semibold cursor-pointer select-none"
               aria-label="User menu"
             >
-              <CircleUserRound size={28} />
+              <LuCircleUserRound size={28} />
             </button>
             {dropdownOpen && (
               <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-300 rounded shadow-md z-50">
