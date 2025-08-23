@@ -5,6 +5,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import CustomError from '../utils/CustomError.js';
 import Product from '../models/productModel.js';
 import {sendEmail} from '../utils/sendEmail.js'
+import { orderConfirmationTemplate } from '../utils/emailTemplate.js';
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -75,31 +76,17 @@ export const verifyPayment = asyncHandler(async (req, res) => {
     shippingAddress,
   });
 
-  for (const item of orderItems) {
-    const product = await Product.findById(item.product);
-    if (product) {
-      product.stock = Math.max(product.stock - item.quantity, 0);
-      await product.save();
-    }
-  }
+  await Promise.all(
+    orderItems.map(async (item) => {
+      const product = await Product.findById(item.product);
+      if (product) {
+        product.stock = Math.max(product.stock - item.quantity, 0);
+        await product.save();
+      }
+    })
+  );
 
-  const emailHtml = `
-    <h1>Thank you for your order!</h1>
-    <p>Hi,</p>
-    <p>Your order has been placed successfully.</p>
-    <p><strong>Order ID:</strong> ${order._id}</p>
-    <p><strong>Total:</strong> ₹${totalPrice.toLocaleString()}</p>
-    <h3>Shipping Address:</h3>
-    <p>
-      ${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}, 
-      ${shippingAddress.zipCode}, ${shippingAddress.country}
-    </p>
-    <h3>Order Items:</h3>
-    <ul>
-      ${orderItems.map(i => `<li>${i.quantity} x ${i.productName} @ ₹${i.price.toLocaleString()}</li>`).join('')}
-    </ul>
-    <p>We will notify you once your order is shipped.</p>
-  `;
+  const emailHtml = orderConfirmationTemplate(order, totalPrice, shippingAddress, orderItems);
 
   await sendEmail({
     to: email,

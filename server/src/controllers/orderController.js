@@ -4,14 +4,15 @@ import Product from '../models/productModel.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import CustomError from '../utils/CustomError.js';
 import { sendEmail } from '../utils/sendEmail.js';
+import { orderConfirmationTemplate } from "../utils/emailTemplate.js";
 
 export const placeOrder = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const { shippingAddress, email } = req.body;
 
-  const cart = await Cart.findOne({ user: userId }).populate('items.product');
+  const cart = await Cart.findOne({ user: userId }).populate("items.product");
   if (!cart || cart.items.length === 0) {
-    throw new CustomError('Cart is empty', 400);
+    throw new CustomError("Cart is empty", 400);
   }
 
   const orderItems = cart.items.map(item => ({
@@ -21,55 +22,45 @@ export const placeOrder = asyncHandler(async (req, res) => {
     price: item.product.price,
   }));
 
-  const totalPrice = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = orderItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   const order = await Order.create({
     user: userId,
     orderItems,
     shippingAddress,
     totalPrice,
-    status: 'processing',
-    paymentStatus: 'pending',
+    status: "processing",
+    paymentStatus: "pending",
   });
 
-  for (const item of orderItems) {
-    const product = await Product.findById(item.product);
-    if (product) {
-      product.stock = Math.max(product.stock - item.quantity, 0);
-      await product.save();
-    }
-  }
+  await Promise.all(
+    orderItems.map(async (item) => {
+      const product = await Product.findById(item.product);
+      if (product) {
+        product.stock = Math.max(product.stock - item.quantity, 0);
+        await product.save();
+      }
+    })
+  );
 
   await Cart.findOneAndDelete({ user: userId });
 
   if (email) {
-    const emailHtml = `
-      <h1>Thank you for your order!</h1>
-      <p>Your order has been placed successfully.</p>
-      <p><strong>Order ID:</strong> ${order._id}</p>
-      <p><strong>Total:</strong> ₹${totalPrice.toLocaleString()}</p>
-      <h3>Shipping Address:</h3>
-      <p>
-        ${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}, 
-        ${shippingAddress.zipCode}, ${shippingAddress.country}
-      </p>
-      <h3>Order Items:</h3>
-      <ul>
-        ${orderItems.map(i => `<li>${i.quantity} x ${i.productName} @ ₹${i.price.toLocaleString()}</li>`).join('')}
-      </ul>
-      <p>We will notify you once your order is shipped.</p>
-    `;
+    const emailHtml = orderConfirmationTemplate(order, shippingAddress, orderItems, totalPrice);
 
     await sendEmail({
       to: email,
-      subject: 'ShopEase Order Confirmation',
+      subject: "ShopEase Order Confirmation",
       html: emailHtml,
     });
   }
 
   res.status(201).json({
     success: true,
-    message: 'Order placed successfully',
+    message: "Order placed successfully",
     data: order,
   });
 });

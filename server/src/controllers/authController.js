@@ -2,6 +2,9 @@ import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import CustomError from '../utils/CustomError.js';
+import crypto from 'crypto'
+import { forgotPasswordTemplate } from '../utils/emailTemplate.js';
+import { sendEmail } from '../utils/sendEmail.js';
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -93,3 +96,66 @@ export const logoutUser = (req, res) => {
       message: 'Logged out successfully',
     });
 };
+
+export const forgotPassword = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new CustomError('User not found with this email', 404));
+  }
+
+  const resetToken = user.getResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
+
+  const resetUrl = `${process.env.CLIENT_URL}reset-password/${resetToken}`;
+
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: 'ShopEase Password Reset',
+      html: forgotPasswordTemplate(resetUrl, user.name),
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Password reset link sent to your email',
+    });
+  } catch (err) {
+      // console.error(err)
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+      return next(new CustomError('Email could not be sent', 500));
+  }
+
+});
+
+export const resetPassword = asyncHandler(async (req, res, next) => {
+  const resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(new CustomError('Invalid or expired reset token', 400));
+  }
+
+  const { password } = req.body;
+  if (!password) {
+    return next(new CustomError('Password is required', 400));
+  }
+
+  user.password = password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  sendTokenResponse(user, 200, res);
+});
