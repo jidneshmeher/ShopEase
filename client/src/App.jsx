@@ -8,6 +8,7 @@ import useAuth from "./features/auth/hooks/useAuth";
 import { fetchCartThunk } from './features/cart/cartSlice';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ function App() {
         <AppRoutes />
       </BrowserRouter>
       <Toaster position="top-right" />
+      <Analytics />
     </>
   );
 }
