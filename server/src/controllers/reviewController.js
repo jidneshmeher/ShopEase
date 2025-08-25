@@ -1,4 +1,5 @@
 import Review from '../models/reviewModel.js';
+import Product from '../models/productModel.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import CustomError from '../utils/CustomError.js';
 
@@ -15,12 +16,16 @@ export const addReview = asyncHandler(async (req, res, next) => {
     return next(new CustomError('You have already reviewed this product', 400));
   }
 
-  const review = await Review.create({
+  let review = await Review.create({
     user: userId,
     product,
     rating,
     comment,
   });
+
+  await Product.findByIdAndUpdate(product, { $push: { reviews: review._id } });
+
+  review = await review.populate('user', 'name email');
 
   res.status(201).json({
     success: true,
@@ -34,12 +39,12 @@ export const updateReview = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
   const { rating, comment } = req.body;
 
-  const review = await Review.findById(reviewId);
+  const review = await Review.findById(reviewId).populate('user', 'name email');
   if (!review) {
     return next(new CustomError('Review not found', 404));
   }
 
-  if (review.user.toString() !== userId.toString()) {
+  if (review.user._id.toString() !== userId.toString()) {
     return next(new CustomError('Not authorized to update this review', 403));
   }
 
@@ -68,7 +73,9 @@ export const deleteReview = asyncHandler(async (req, res, next) => {
     return next(new CustomError('Not authorized to delete this review', 403));
   }
 
-  await review.remove();
+  await Product.findByIdAndUpdate(review.product, { $pull: { reviews: review._id } });
+
+  await review.deleteOne();
 
   res.status(200).json({
     success: true,

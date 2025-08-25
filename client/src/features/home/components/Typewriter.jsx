@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const Typewriter = ({ words, typingSpeed = 150, pauseTime = 2000 }) => {
+export default function Typewriter({ words, typingSpeed = 150, pauseTime = 2000 }){
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [typing, setTyping] = useState(true);
@@ -32,5 +32,3 @@ const Typewriter = ({ words, typingSpeed = 150, pauseTime = 2000 }) => {
     </span>
   );
 };
-
-export default Typewriter;

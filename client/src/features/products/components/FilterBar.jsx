@@ -1,6 +1,6 @@
 import Dropdown from "../../../components/Dropdown";
 
-export default function FilterBar({ total, categories = [], brands = [], filters, onChange }) {
+export default function FilterBar({ total, categories = [], brands = [], filters, onChange }){
 
   return (
     <div className="flex flex-wrap items-center justify-between px-20 py-8 max-w-full gap-4">

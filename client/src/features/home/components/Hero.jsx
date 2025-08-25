@@ -5,7 +5,7 @@ import Typewriter from './Typewriter.jsx';
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const Hero = () => {
+export default function Hero() {
   const headingRef = useRef(null);
   const buttonRef = useRef(null);
 
@@ -72,5 +72,3 @@ const Hero = () => {
     </section>
   );
 };
-
-export default Hero;

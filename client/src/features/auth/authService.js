@@ -12,7 +12,7 @@ export const register = async (name, email, password, phone) => {
 
 export const getCurrentUser = async () => {
   const res = await api.get("/api/v1/auth/me");
-  return res.data;
+  return res.data.data;
 };
 
 export const logout = async () => {

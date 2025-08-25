@@ -10,7 +10,7 @@ const statusColors = {
   cancelled: 'text-red-600',
 };
 
-const Orders = () => {
+export default function Orders(){
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -79,5 +79,3 @@ const Orders = () => {
     </div>
   );
 };
-
-export default Orders;

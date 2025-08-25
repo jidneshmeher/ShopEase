@@ -1,6 +1,7 @@
 import { FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 
-const Rating = ({ rating = 0, totalReviews = 0 }) => {
+export default function Rating({ rating = 0}) {
+  
   const renderStars = () => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -14,9 +15,6 @@ const Rating = ({ rating = 0, totalReviews = 0 }) => {
   return (
     <div className="flex items-center space-x-2">
       <div className="flex space-x-1">{renderStars()}</div>
-      <span className="text-gray-600">| {totalReviews} reviews</span>
     </div>
   );
 };
-
-export default Rating;

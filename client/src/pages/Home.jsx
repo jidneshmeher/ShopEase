@@ -13,7 +13,7 @@ import laptopImage from "../assets/images/home/category-laptop.jpg";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const Home = () => {
+export default function Home(){
 
   const categories = [
     {
@@ -102,5 +102,3 @@ const Home = () => {
     </>
   );
 };
-
-export default Home;

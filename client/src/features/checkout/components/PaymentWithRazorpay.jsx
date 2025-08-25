@@ -3,7 +3,7 @@ import { createRazorpayOrder, verifyRazorpayPayment } from '../checkoutService.j
 import Processing from './Processing.jsx';
 import {logger} from "../../../utils/logger.js"
 
-const PaymentWithRazorpay = ({ orderData, onPaymentSuccess, onPaymentError, validateForm }) => {
+export default function PaymentWithRazorpay({ orderData, onPaymentSuccess, onPaymentError, validateForm }){
   const [loading, setLoading] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
 
@@ -117,4 +117,4 @@ const PaymentWithRazorpay = ({ orderData, onPaymentSuccess, onPaymentError, vali
   );
 };
 
-export default PaymentWithRazorpay;
+

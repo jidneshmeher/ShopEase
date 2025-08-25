@@ -19,8 +19,14 @@ const userSchema = new mongoose.Schema({
     required: [true, "Password is required"],
     select: false
   },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
+  resetPasswordToken: {
+    type: String,
+    select: false
+  },
+  resetPasswordExpire: {
+    type: Date,
+    select: false
+  },
   phone: {
     type: String,
     required: [true, "Phone number is required"],

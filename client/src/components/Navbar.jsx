@@ -8,7 +8,7 @@ import { FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { LuCircleUserRound } from "react-icons/lu";
 import { logger } from "../utils/logger";
 
-const Navbar = () => {
+export default function Navbar(){
   const dispatch = useDispatch();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -214,5 +214,3 @@ const Navbar = () => {
     </header>
   );
 };
-
-export default Navbar;

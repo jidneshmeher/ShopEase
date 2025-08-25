@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const Intro = () => {
+export default function Intro(){
   const containerRef = useRef(null);
 
   useGSAP(() => {
@@ -40,5 +40,3 @@ const Intro = () => {
     </section>
   );
 };
-
-export default Intro;

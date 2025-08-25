@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const CategoryCard = ({ image, title, subTitle, link }) => {
+export default function CategoryCard({ image, title, subTitle, link }) {
   return (
     <div className="relative text-center group w-full max-w-[570px] mx-auto px-4 sm:px-0">
       <div className="relative">
@@ -27,5 +27,3 @@ const CategoryCard = ({ image, title, subTitle, link }) => {
     </div>
   );
 };
-
-export default CategoryCard;

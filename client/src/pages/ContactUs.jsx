@@ -9,7 +9,7 @@ export default function ContactUs() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    email: user?.data?.email || "",
+    email: user?.email || "",
     subject: "",
     message: "",
   });
@@ -22,7 +22,7 @@ export default function ContactUs() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user?.data) {
+    if (!user) {
       toast.error("Please log in first to submit a message.");
       navigate("/login");
       return;
@@ -38,7 +38,7 @@ export default function ContactUs() {
       setLoading(true);
       await api.post("/contact", { email, subject, message });
       toast.success("Your message has been sent. We will get back to you soon!");
-      setFormData({ email: user.data.email || "", subject: "", message: "" });
+      setFormData({ email: user.email || "", subject: "", message: "" });
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to send message.");
     } finally {
@@ -69,7 +69,7 @@ export default function ContactUs() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                readOnly={!!user?.data?.email}
+                readOnly={!!user?.email}
               />
             </div>
 

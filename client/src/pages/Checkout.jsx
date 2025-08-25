@@ -23,14 +23,14 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState(null);
 
   const [formData, setFormData] = useState({
-    name: user?.data?.name || '',
-    email: user?.data?.email || '',
-    phoneNumber: user?.data?.phone || '',
-    street: user?.data?.address?.[0]?.street || '',
-    city: user?.data?.address?.[0]?.city || '',
-    state: user?.data?.address?.[0]?.state || '',
-    zip: user?.data?.address?.[0]?.zipCode || '',
-    country: user?.data?.address?.[0]?.country || '',
+    name: user?.name || '',
+    email: user?.email || '',
+    phoneNumber: user?.phone || '',
+    street: user?.address?.[0]?.street || '',
+    city: user?.address?.[0]?.city || '',
+    state: user?.address?.[0]?.state || '',
+    zip: user?.address?.[0]?.zipCode || '',
+    country: user?.address?.[0]?.country || '',
   });
 
   const [showProcessing, setShowProcessing] = useState(false);
@@ -79,9 +79,9 @@ export default function Checkout() {
         zipCode: formData.zip,
         country: formData.country,
       },
-      userId: user?.data._id,
+      userId: user?._id,
       totalPrice: cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0),
-      email: user?.data.email,
+      email: user?.email,
     };
   
     try {
@@ -115,9 +115,9 @@ export default function Checkout() {
       zipCode: formData.zip,
       country: formData.country,
     },
-    userId: user?.data._id || '',
+    userId: user?._id || '',
     totalPrice: cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0),
-    email: user?.data.email || '',
+    email: user?.email || '',
   };
 
   return (
@@ -150,7 +150,7 @@ export default function Checkout() {
                 <label className="block text-gray-700 font-medium mb-1">Phone Number</label>
                 <PhoneInput
                   country={"in"}
-                  value={formData.phoneNumber || user?.data?.phone || ''}
+                  value={formData.phoneNumber || user?.phone || ''}
                   onChange={(value) =>
                     setFormData((prev) => ({ ...prev, phoneNumber: "+" + value }))
                   }

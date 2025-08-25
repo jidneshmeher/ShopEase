@@ -3,7 +3,7 @@ import PromoVideo from "../../../assets/videos/promo.mp4";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const VideoSection = () => {
+export default function VideoSection() {
   const videoRef = useRef();
   const sectionRef = useRef();
 
@@ -38,5 +38,3 @@ const VideoSection = () => {
     </section>
   );
 };
-
-export default VideoSection;
