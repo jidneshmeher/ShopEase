@@ -1,6 +1,6 @@
 export default function CategoryNav({ categories = [], filters={}, onChange }) {
   return (
-    <div className="w-full sticky top-16 z-10 bg-white shadow-sm border-b">
+    <div className="w-full top-16 bg-white shadow-sm border-b">
       <div className="flex items-center justify-center space-x-10 px-16 py-3 overflow-x-auto scrollbar-hide">
         {categories.map((cat) => (
           <button

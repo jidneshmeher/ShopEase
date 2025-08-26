@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../features/products/components/ProductCard";
 import FilterBar from "../features/products/components/FilterBar";
 import Pagination from "../features/products/components/Pagination";
 import * as productService from "../features/products/productService";
-import {logger} from "../utils/logger"
+import { logger } from "../utils/logger";
+import CategoryNav from "../features/products/components/CategoryNav";
+import { sanitizeFilters } from "../utils/sanitizeFilters";
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,21 +16,37 @@ export default function Products() {
 
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+
   const currentPage = parseInt(searchParams.get("page")) || 1;
 
-  const [filters, setFilters] = useState(() => ({
-    category: searchParams.get("category") || "",
-    brand: searchParams.get("brand") || "",
-    inStock: searchParams.get("inStock") === "true" || null,
-  }));
+  const rawFilters = useMemo(
+    () => ({
+      category: searchParams.get("category") || "",
+      brand: searchParams.getAll("brand") || [],
+      inStock: searchParams.get("inStock"),
+      sort: searchParams.get("sort") || "created-descending",
+    }),
+    [searchParams]
+  );
+
+  const filters = useMemo(
+    () => sanitizeFilters(rawFilters, categories, brands),
+    [rawFilters, categories, brands]
+  );
 
   useEffect(() => {
-    setFilters({
-      category: searchParams.get("category") || "",
-      brand: searchParams.get("brand") || "",
-      inStock: searchParams.get("inStock") === "true" || null,
-    });
-  }, [searchParams]);
+    const params = new URLSearchParams();
+
+    if (filters.category) params.set("category", filters.category);
+    filters.brand.forEach((b) => params.append("brand", b));
+    if (filters.inStock) params.set("inStock", "true");
+    if (filters.sort) params.set("sort", filters.sort);
+    params.set("page", currentPage);
+
+    if (params.toString() !== searchParams.toString()) {
+      setSearchParams(params, { replace: true });
+    }
+  }, [filters, currentPage, searchParams, setSearchParams]);
 
   useEffect(() => {
     const fetchFilterData = async () => {
@@ -42,11 +60,10 @@ export default function Products() {
         logger.error("Failed to load filter data", error);
       }
     };
-  
+
     fetchFilterData();
   }, [filters.category]);
-  
-  
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -57,6 +74,7 @@ export default function Products() {
         });
         setProducts(data.data);
         setTotal(data.count);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } catch (error) {
         logger.error("Failed to load products", error);
       }
@@ -65,14 +83,14 @@ export default function Products() {
   }, [currentPage, filters]);
 
   const handleFilterChange = (newFilters) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", 1);
+    const params = new URLSearchParams();
+
     if (newFilters.category) params.set("category", newFilters.category);
-    else params.delete("category");
-    if (newFilters.brand) params.set("brand", newFilters.brand);
-    else params.delete("brand");
+    newFilters.brand?.forEach((b) => params.append("brand", b));
     if (newFilters.inStock) params.set("inStock", "true");
-    else params.delete("inStock");
+    if (newFilters.sort) params.set("sort", newFilters.sort);
+
+    params.set("page", 1);
     setSearchParams(params);
   };
 
@@ -80,16 +98,18 @@ export default function Products() {
     const params = new URLSearchParams(searchParams);
     params.set("page", page);
     setSearchParams(params);
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const totalPages = Math.max(Math.ceil(total / limit), 1);
 
   return (
-    <section className="text-black px-6 py-8 min-h-screen">
-      <FilterBar
+    <section className="text-black px-6 min-h-screen">
+      <CategoryNav
         categories={categories}
+        filters={filters}
+        onChange={handleFilterChange}
+      />
+      <FilterBar
         brands={brands}
         filters={filters}
         total={total}

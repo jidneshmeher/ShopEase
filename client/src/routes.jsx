@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useEffect } from "react";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import NotFound from "./pages/NotFound";
 
 export default function AppRoutes() {
 
@@ -30,7 +31,7 @@ export default function AppRoutes() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/products" element={<Products/>} />
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/about" element={<AboutUs />} />
@@ -47,6 +48,8 @@ export default function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

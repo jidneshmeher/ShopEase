@@ -8,23 +8,31 @@ class ApiFeatures {
     const queryObj = { ...this.queryStr };
     const excludeFields = ['sort', 'page', 'limit', 'fields'];
     excludeFields.forEach((el) => delete queryObj[el]);
-    
+
     if (queryObj?.inStock === 'true') {
       queryObj.stock = { $gt: 0 };
     }
     delete queryObj.inStock; 
 
     let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
     this.query = this.query.find(JSON.parse(queryStr));
     return this;
   }
 
   sort() {
-    if (this.queryStr.sort) {
-      const sortBy = this.queryStr.sort.split(',').join(' ');
-      this.query = this.query.sort(sortBy);
+    const sortMapping = {
+      "title-ascending": "name",
+      "title-descending": "-name",
+      "price-ascending": "price",
+      "price-descending": "-price",
+      "created-ascending": "createdAt",
+      "created-descending": "-createdAt",
+    };
+    
+    if (this.queryStr.sort && sortMapping[this.queryStr.sort]) {
+      this.query = this.query.sort(sortMapping[this.queryStr.sort]);
     } else {
       this.query = this.query.sort('-createdAt');
     }

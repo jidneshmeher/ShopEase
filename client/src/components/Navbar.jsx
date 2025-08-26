@@ -82,7 +82,7 @@ export default function Navbar(){
               : "text-gray-900 hover:text-black"
           }
         >
-          CONTACT US
+          CONTACT
         </NavLink>
       </nav>
 
@@ -197,7 +197,7 @@ export default function Navbar(){
                   : "text-gray-900 hover:text-black"
               }
             >
-              CONTACT US
+              CONTACT
             </NavLink>
             {!user && (
               <Link

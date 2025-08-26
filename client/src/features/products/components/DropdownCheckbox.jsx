@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { IoClose } from "react-icons/io5"; 
-import { logger } from "../../../utils/logger";
+// import { IoClose } from "react-icons/io5"; 
+// import { logger } from "../../../utils/logger";
 
 export default function DropdownCheckbox({
   label,
@@ -35,13 +35,13 @@ export default function DropdownCheckbox({
     setOpen(false);
   };
 
-  const handleRemove = (option) => {
-    onChange(value.filter((v) => v !== option));
-  };
+  // const handleRemove = (option) => {
+  //   onChange(value.filter((v) => v !== option));
+  // };
 
-  const handleClear = () => {
-    onChange([]);
-  };
+  // const handleClear = () => {
+  //   onChange([]);
+  // };
 
   return (
     <div className={`relative mr-6 inline-block ${className}`} ref={dropdownRef}>

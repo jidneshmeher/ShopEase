@@ -8,6 +8,7 @@ import { FaChevronDown, FaChevronUp, FaStar, FaCheckSquare } from "react-icons/f
 import { addReview, getReviewsByProduct, updateReview } from '../features/reviews/reviewService';
 import ReviewCard from '../features/reviews/components/ReviewCard';
 import useAuth from '../features/auth/hooks/useAuth';
+import { logger } from '../utils/logger';
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -20,6 +21,8 @@ export default function ProductDetails() {
   const [userRating, setUserRating] = useState(0);
   const [userComment, setUserComment] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const { user } = useAuth();
 
@@ -30,8 +33,13 @@ export default function ProductDetails() {
         if (data.data?.images?.length > 0) {
           setSelectedImage(data.data.images[0]);
         }
+        setLoading(false);
       })
-      .catch(() => toast.error('Failed to fetch product'));
+      .catch((err) => {
+        setLoading(false);
+        setError(true);
+        toast.error('Failed to fetch product')
+      });
 
     getReviewsByProduct(id)
       .then(data => setReviews(data.data))
@@ -48,7 +56,31 @@ export default function ProductDetails() {
     }
   }, [userReview, isEditing]);
 
-  if (!product) return <div className="p-8">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center">
+        <p className="text-xl font-semibold text-gray-700 animate-pulse">Loading product...</p>
+      </div>
+    );
+  }
+
+  
+  if (error || !product) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center">
+        <h2 className="text-2xl font-bold mb-2">Product Not Found</h2>
+        <p className="text-gray-500 mb-4">
+          Sorry, we couldn’t find the product you’re looking for.
+        </p>
+        <a
+          href="/products"
+          className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        >
+          Go Back
+        </a>
+      </div>
+    );
+  }
 
   const totalReviews = reviews.length;
 

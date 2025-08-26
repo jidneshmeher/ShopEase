@@ -1,57 +1,49 @@
-import Dropdown from "../../../components/Dropdown";
+import Dropdown from "./Dropdown";
+import DropdownCheckbox from "./DropdownCheckbox";
 
-export default function FilterBar({ total, categories = [], brands = [], filters, onChange }){
+export default function FilterBar({ total, brands = [], filters, onChange }) {
+
+  const sortOptions = {
+    "Alphabetically, A-Z": "title-ascending",
+    "Alphabetically, Z-A": "title-descending",
+    "Price, low to high": "price-ascending",
+    "Price, high to low": "price-descending",
+    "Date, old to new": "created-ascending",
+    "Date, new to old": "created-descending",
+  };
+
+  const sortLabels = Object.keys(sortOptions);
 
   return (
-    <div className="flex flex-wrap items-center justify-between px-20 py-8 max-w-full gap-4">
-      <Dropdown
-        label="All Categories"
-        options={categories}
-        value={filters.category}
-        onChange={(val) => onChange({...filters, category:val})}
-      />
+    <div className="flex flex-wrap items-center justify-between my-5 py-3 px-20 max-w-full gap-4 bg-white sticky top-[64px] z-30">
 
-      <Dropdown
-        label="All Brands"
+      <DropdownCheckbox
+        label="BRANDS"
         options={brands}
         value={filters.brand}
         onChange={(val) => onChange({...filters, brand:val})}
       />
 
-      <Dropdown
-        label="All Ratings"
-        options={["1", "2", "3", "4", "5"]}
-        value={filters.rating}
-        onChange={(val) => onChange({...filters, rating:val})}
-      />
-
-      <label className="flex items-center space-x-2 cursor-pointer whitespace-nowrap">
+      <label className="flex font-semibold  items-center space-x-2 cursor-pointer whitespace-nowrap">
         <input
           type="checkbox"
           name="inStockOnly"
-          checked={filters.inStockOnly}
-          // onChange={(val) => onChange({...filters, inStock:val})}
+          checked={!!filters.inStock}
+          onChange={(e) => onChange({...filters, inStock:e.target.checked})}
           className="cursor-pointer"
         />
-        <span>In Stock Only</span>
+        <span>IN STOCK ONLY</span>
       </label>
 
-      <div className="text-gray-600 font-semibold ml-auto mr-6 whitespace-nowrap">{total} Products</div>
+      <div className=" font-semibold ml-auto mr-6 whitespace-nowrap">{total} PRODUCTS</div>
 
       <Dropdown
-        label="Sort By"
-        options={[
-          "Featured",
-          "Best Selling",
-          "Alphabetically, A-Z",
-          "Alphabetically, Z-A",
-          "Price, low to high",
-          "Price, high to low",
-          "Date, old to new",
-          "Date, new to old",
-        ]}
-        value={filters.sortBy}
-        onChange={(val) => onChange({ target: { name: "sortBy", value: val } })}
+        label="SORT BY"
+        options={sortLabels}
+        value={Object.keys(sortOptions).find(
+          key => sortOptions[key] === filters.sort
+        )}
+        onChange={(label) => onChange({...filters, sort:sortOptions[label]})}
         align="right"
       />
     </div>
