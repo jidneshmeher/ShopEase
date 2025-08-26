@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -13,6 +13,9 @@ import { clearCartThunk } from '../features/cart/cartSlice';
 import PhoneInput from "react-phone-input-2";
 import { validatePhoneNumber } from '../utils/phone';
 import { placeOrders as placeOrderApi } from '../features/orders/orderService';
+
+const SHIPPING_FEE = 150;
+const FREE_SHIPPING_THRESHOLD = 15000;
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -72,11 +75,19 @@ export default function Checkout() {
       : product.price;
   };
 
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + calculatePrice(item.product) * item.quantity,
+    0
+  );
+  const shippingCost = cartItems.length > 0 ? (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE) : 0;
+  const total = subtotal + shippingCost;
+  const amountLeft = FREE_SHIPPING_THRESHOLD - subtotal;
+
   const placeOrder = async () => {
     if (!validateForm()) return;
-  
+
     setShowProcessing(true);
-  
+
     const orderData = {
       orderItems: cartItems.map(({ product, quantity }) => ({
         product: product._id,
@@ -92,10 +103,10 @@ export default function Checkout() {
         country: formData.country,
       },
       userId: user?._id,
-      totalPrice: cartItems.reduce((acc, item) => acc + calculatePrice(item.product) * item.quantity, 0),
+      totalPrice: total,
       email: user?.email,
     };
-  
+
     try {
       await placeOrderApi(orderData);
       toast.success("Order placed successfully!");
@@ -107,11 +118,12 @@ export default function Checkout() {
           navigate("/orders");
         });
     } catch (err) {
-      toast.error(err?.message || "Failed to place order.");
+        toast.error(err?.message || "Failed to place order.");
     } finally {
       setShowProcessing(false);
     }
   };
+
 
   const razorpayOrderData = {
     orderItems: cartItems.map(({ product, quantity }) => ({
@@ -128,7 +140,7 @@ export default function Checkout() {
       country: formData.country,
     },
     userId: user?._id || '',
-    totalPrice: cartItems.reduce((acc, item) => acc + calculatePrice(item.product) * item.quantity, 0),
+    totalPrice: total,
     email: user?.email || '',
   };
 
@@ -136,6 +148,7 @@ export default function Checkout() {
     <div className="min-h-screen">
       <div className="flex flex-col lg:flex-row gap-10 max-w-full mx-auto my-10 px-4 sm:px-10 lg:px-20 xl:px-32">
         <div className="flex-1 space-y-6">
+          {/* Shipping Section */}
           <section className="px-4 pt-8 rounded-lg shadow space-y-4 py-5">
             <h2 className="text-xl font-semibold ">Shipping Methods</h2>
             <form className="space-y-4">
@@ -155,6 +168,7 @@ export default function Checkout() {
             </form>
           </section>
 
+          {/* Contact Section */}
           <section className="px-4 py-6 bg-white rounded-lg shadow space-y-6">
             <h2 className="text-xl font-semibold">Contact Details</h2>
             <form className="space-y-4 mt-3">
@@ -172,84 +186,32 @@ export default function Checkout() {
               </div>
             </form>
           </section>
-                
+
+          {/* Delivery Section */}
           <section className="px-4 py-6 bg-white rounded-lg shadow space-y-6">
             <h2 className="text-xl font-semibold">Delivery Details</h2>
             <form className="space-y-4 mt-3">
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">Full Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Full Name"
-                  className="w-full border-b border-gray-300 py-2 focus:outline-none"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-              </div>
-                
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">Street Address</label>
-                <input
-                  type="text"
-                  name="street"
-                  placeholder="Street Address"
-                  className="w-full border-b border-gray-300 py-2 focus:outline-none"
-                  value={formData.street}
-                  onChange={handleChange}
-                />
-              </div>
-                
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">City</label>
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                  className="w-full border-b border-gray-300 py-2 focus:outline-none"
-                  value={formData.city}
-                  onChange={handleChange}
-                />
-              </div>
-                
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">State</label>
-                <input
-                  type="text"
-                  name="state"
-                  placeholder="State"
-                  className="w-full border-b border-gray-300 py-2 focus:outline-none"
-                  value={formData.state}
-                  onChange={handleChange}
-                />
-              </div>
-                
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">ZIP Code</label>
-                <input
-                  type="text"
-                  name="zip"
-                  placeholder="ZIP Code"
-                  className="w-full border-b border-gray-300 py-2 focus:outline-none"
-                  value={formData.zip}
-                  onChange={handleChange}
-                />
-              </div>
-                
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">Country</label>
-                <input
-                  type="text"
-                  name="country"
-                  placeholder="Country"
-                  className="w-full border-b border-gray-300 py-2 focus:outline-none"
-                  value={formData.country}
-                  onChange={handleChange}
-                />
-              </div>
+              {['name', 'street', 'city', 'state', 'zip', 'country'].map((field) => (
+                <div key={field}>
+                  <label className="block text-gray-700 font-medium mb-1">
+                    {field === 'name' ? 'Full Name' :
+                     field === 'zip' ? 'ZIP Code' : field.charAt(0).toUpperCase() + field.slice(1)}
+                  </label>
+                  <input
+                    type="text"
+                    name={field}
+                    placeholder={field === 'name' ? 'Full Name' :
+                                field === 'zip' ? 'ZIP Code' : field.charAt(0).toUpperCase() + field.slice(1)}
+                    className="w-full border-b border-gray-300 py-2 focus:outline-none"
+                    value={formData[field]}
+                    onChange={handleChange}
+                  />
+                </div>
+              ))}
             </form>
           </section>
 
+          {/* Payment Section */}
           <section className="px-4 py-6 bg-white rounded-lg shadow">
             <h2 className="text-xl font-semibold">Payment Details</h2>
             <p className="text-gray-500 mt-6">Complete your order by selecting a payment method.</p>
@@ -309,37 +271,56 @@ export default function Checkout() {
           </section>
         </div>
 
+        {/* Order Summary */}
         <div className="w-full lg:w-1/3 p-6 pt-0 mt-6 lg:mt-0 rounded shadow flex flex-col justify-between h-max text-gray-900">
-          <h3 className="text-xl font-semibold my-6 py-2">Order Summary</h3>
+          <h3 className="text-2xl font-bold mb-6 py-2">Order Summary</h3>
           {cartItems.length === 0 ? (
             <p className="text-center text-gray-500 mt-6">Your cart is empty.</p>
           ) : (
-            cartItems.map(({ product, quantity }) => {
-              const price = calculatePrice(product);
-              return (
-                <div key={product._id} className="flex items-center space-x-4 border-b pb-4 last:border-none">
-                  <img src={product.images?.[0]} alt={product.name} className="w-28 h-28 object-cover rounded" />
-                  <div className="flex-1">
-                    <h3 className="font-semibold">{product.name}</h3>
-                    <p className="text-lg font-bold">
-                      {product.discount ? (
-                        <>
-                          <span className="line-through text-gray-500 mr-2">₹{product.price.toLocaleString()}</span>
-                          <span className="text-green-600">₹{price.toLocaleString()}</span>
-                        </>
-                      ) : (
-                        <>₹{price.toLocaleString()}</>
+            <>
+              {cartItems.map(({ product, quantity }) => {
+                const price = calculatePrice(product);
+                return (
+                  <div key={product._id} className="flex items-center space-x-4 border-b pb-4 last:border-none">
+                    <img src={product.images?.[0]} alt={product.name} className="w-28 h-28 object-cover rounded" />
+                    <div className="flex-1">
+                      <h3 className="font-semibold">{product.name}</h3>
+                      <p className="text-lg font-bold">
+                        {product.discount ? (
+                          <>
+                            <span className="line-through text-gray-500 mr-2">₹{product.price.toLocaleString()}</span>
+                            <span className="text-green-600">₹{price.toLocaleString()}</span>
+                          </>
+                        ) : (
+                          <>₹{price.toLocaleString()}</>
+                        )}
+                      </p>
+                      <p className="text-sm text-gray-600">Qty: {quantity}</p>
+                      {product.stock === 0 && (
+                        <p className="text-red-500 font-semibold mt-1">Out of Stock</p>
                       )}
-                    </p>
-
-                    <p className="text-sm text-gray-600">Qty: {quantity}</p>
-                    {product.stock === 0 && (
-                      <p className="text-red-500 font-semibold mt-1">Out of Stock</p>
-                    )}
+                    </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              })}
+
+              {/* Subtotal, Shipping, Total */}
+              <div className="mt-2 pt-4 space-y-2">
+                <p className="flex justify-between text-lg">
+                  <span>Subtotal</span>
+                  <span>₹{subtotal.toLocaleString()}</span>
+                </p>
+                <p className="flex justify-between text-lg">
+                  <span>Shipping</span>
+                  <span>₹{shippingCost.toLocaleString()}</span>
+                </p>
+                <hr className="my-4" />
+                <p className="flex justify-between text-xl font-bold">
+                  <span>Total</span>
+                  <span>₹{total.toLocaleString()}</span>
+                </p>
+              </div>
+            </>
           )}
         </div>
       </div>

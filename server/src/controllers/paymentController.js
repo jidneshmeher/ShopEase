@@ -86,7 +86,7 @@ export const verifyPayment = asyncHandler(async (req, res) => {
     })
   );
 
-  const emailHtml = orderConfirmationTemplate(order, totalPrice, shippingAddress, orderItems);
+  const emailHtml = orderConfirmationTemplate(order, shippingAddress, orderItems, totalPrice);
 
   await sendEmail({
     to: email,

@@ -6,6 +6,7 @@ export const createRazorpayOrder = async (orderData) => {
 };
 
 export const verifyRazorpayPayment = async (paymentData) => {
+  console.log(paymentData)
   const res = await api.post('/api/v1/payments/verify-payment', paymentData, { withCredentials: true });
   return res.data;
 };
