@@ -21,7 +21,6 @@ export default function Checkout() {
   const dispatch = useDispatch();
 
   const [paymentMethod, setPaymentMethod] = useState(null);
-
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -57,7 +56,20 @@ export default function Checkout() {
       toast.error("Please select a payment method.");
       return false;
     }
+
+    const outOfStock = cartItems.some(item => item.product.stock === 0);
+    if (outOfStock) {
+      toast.error("Some items in your cart are out of stock. Please remove them before placing the order.");
+      return false;
+    }
+
     return true;
+  };
+
+  const calculatePrice = (product) => {
+    return product.discount
+      ? product.price - (product.price * product.discount) / 100
+      : product.price;
   };
 
   const placeOrder = async () => {
@@ -70,7 +82,7 @@ export default function Checkout() {
         product: product._id,
         productName: product.name,
         quantity,
-        price: product.price,
+        price: calculatePrice(product),
       })),
       shippingAddress: {
         street: formData.street,
@@ -80,7 +92,7 @@ export default function Checkout() {
         country: formData.country,
       },
       userId: user?._id,
-      totalPrice: cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0),
+      totalPrice: cartItems.reduce((acc, item) => acc + calculatePrice(item.product) * item.quantity, 0),
       email: user?.email,
     };
   
@@ -106,7 +118,7 @@ export default function Checkout() {
       product: product._id,
       productName: product.name,
       quantity,
-      price: product.price,
+      price: calculatePrice(product),
     })),
     shippingAddress: {
       street: formData.street,
@@ -116,7 +128,7 @@ export default function Checkout() {
       country: formData.country,
     },
     userId: user?._id || '',
-    totalPrice: cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0),
+    totalPrice: cartItems.reduce((acc, item) => acc + calculatePrice(item.product) * item.quantity, 0),
     email: user?.email || '',
   };
 
@@ -302,16 +314,32 @@ export default function Checkout() {
           {cartItems.length === 0 ? (
             <p className="text-center text-gray-500 mt-6">Your cart is empty.</p>
           ) : (
-            cartItems.map(({ product, quantity }) => (
-              <div key={product._id} className="flex items-center space-x-4 border-b pb-4 last:border-none">
-                <img src={product.images?.[0]} alt={product.name} className="w-28 h-28 object-cover rounded" />
-                <div className="flex-1">
-                  <h3 className="font-semibold">{product.name}</h3>
-                  <p className="text-lg font-bold">₹{product.price.toLocaleString()}</p>
-                  <p className="text-sm text-gray-600">Qty: {quantity}</p>
+            cartItems.map(({ product, quantity }) => {
+              const price = calculatePrice(product);
+              return (
+                <div key={product._id} className="flex items-center space-x-4 border-b pb-4 last:border-none">
+                  <img src={product.images?.[0]} alt={product.name} className="w-28 h-28 object-cover rounded" />
+                  <div className="flex-1">
+                    <h3 className="font-semibold">{product.name}</h3>
+                    <p className="text-lg font-bold">
+                      {product.discount ? (
+                        <>
+                          <span className="line-through text-gray-500 mr-2">₹{product.price.toLocaleString()}</span>
+                          <span className="text-green-600">₹{price.toLocaleString()}</span>
+                        </>
+                      ) : (
+                        <>₹{price.toLocaleString()}</>
+                      )}
+                    </p>
+
+                    <p className="text-sm text-gray-600">Qty: {quantity}</p>
+                    {product.stock === 0 && (
+                      <p className="text-red-500 font-semibold mt-1">Out of Stock</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

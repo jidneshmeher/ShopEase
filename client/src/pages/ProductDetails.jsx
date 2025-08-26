@@ -74,6 +74,10 @@ export default function ProductDetails() {
     1: 'bg-red-400',
   };
 
+  const discountPrice = product.discount 
+  ? product.price - (product.price * product.discount) / 100 
+  : null;
+
   const handleAddToCart = async () => {
     try {
       const data = await addToCart(product._id, 1);
@@ -162,11 +166,32 @@ export default function ProductDetails() {
             <p className="text-black">{product.description}</p>
 
             <div className="flex items-center space-x-4">
-              <span className="text-xl font-semibold text-green-400">
-                <sup className="font-sans">₹</sup>
-                {new Intl.NumberFormat('en-US').format(product.price)}
-              </span>
-              <span className="text-black">| Stock: {product.stock}</span>
+              {discountPrice ? (
+                <>
+                  <span className="text-2xl font-bold text-green-500">
+                    <sup className="font-sans">₹</sup>
+                    {new Intl.NumberFormat("en-US").format(discountPrice)}
+                  </span>
+                  <span className="text-lg text-gray-500 line-through">
+                    <sup className="font-sans">₹</sup>
+                    {new Intl.NumberFormat("en-US").format(product.price)}
+                  </span>
+                  <span className="text-sm font-semibold text-red-500">
+                    {product.discount}% OFF
+                  </span>
+                </>
+              ) : (
+                <span className="text-2xl font-semibold text-green-500">
+                  <sup className="font-sans">₹</sup>
+                  {new Intl.NumberFormat("en-US").format(product.price)}
+                </span>
+              )}
+            
+              {product.stock > 0 ? (
+                <span className="text-black">| Stock: {product.stock}</span>
+              ) : (
+                <span className="text-red-500 font-semibold">| Out of Stock</span>
+              )}
             </div>
 
             <div className="text-black space-y-2">
@@ -220,12 +245,15 @@ export default function ProductDetails() {
                 )}
               </div>
             )}
-
             <button
               onClick={handleAddToCart}
-              className="bg-blue-600 text-white font-semibold text-base px-6 py-3 rounded hover:bg-blue-700 text-center"
+              disabled={product.stock === 0}
+              className={`px-6 py-3 rounded font-semibold text-base text-center transition-colors
+                ${product.stock === 0 
+                  ? "bg-gray-400 text-white cursor-not-allowed" 
+                  : "bg-blue-600 text-white hover:bg-blue-700"}`}
             >
-              Add to Cart
+              {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
             </button>
           </div>
         </div>

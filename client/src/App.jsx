@@ -21,7 +21,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (user && user.data?._id) {
+    if (user && user._id) {
       dispatch(fetchCartThunk());
     }
   }, [user, dispatch]);

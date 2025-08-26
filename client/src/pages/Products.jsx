@@ -80,6 +80,8 @@ export default function Products() {
     const params = new URLSearchParams(searchParams);
     params.set("page", page);
     setSearchParams(params);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const totalPages = Math.max(Math.ceil(total / limit), 1);
