@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
-  const discountedPrice = product.discount
+
+  const hasDiscount = product.discount > 0;
+
+  const discountedPrice = hasDiscount
     ? Math.round(product.price - (product.price * product.discount) / 100)
     : product.price;
 
@@ -12,21 +15,22 @@ export default function ProductCard({ product }) {
           <img
             src={product.images[0]}
             alt={product.name}
-            className="w-full transition-transform duration-300 ease-in-out group-hover:scale-105"
+            className="w-full h-[523px] object-contain transition-transform duration-300 ease-in-out group-hover:scale-105"
           />
 
-          {product.discount && (
+          {hasDiscount && (
             <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
               {product.discount}% OFF
             </div>
           )}
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-25 transition-all duration-300"></div>
+          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-25 transition-all duration-300">
+          </div>
         </div>
 
         <div className="flex justify-between mt-4 text-xl font-semibold text-gray-900">
           <span>{product.name}</span>
           <span className="flex flex-col items-end">
-            {product.discount ? (
+            {hasDiscount ? (
               <>
                 <span className="line-through text-gray-500 text-sm">
                   ₹{new Intl.NumberFormat("en-US").format(product.price)}

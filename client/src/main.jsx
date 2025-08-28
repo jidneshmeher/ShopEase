@@ -4,11 +4,14 @@ import './styles/global.css'
 import App from './App.jsx'
 import { Provider } from 'react-redux'
 import {store} from "./app/store"
+import { injectStore } from './services/api';
+
+injectStore(store);
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <App />
     </Provider>
-  </StrictMode>,
+  // </StrictMode>
 )

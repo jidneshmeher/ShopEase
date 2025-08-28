@@ -16,7 +16,6 @@ export const getAllProducts = asyncHandler(async (req, res) => {
   });
 });
 
-
 export const getProductById = asyncHandler(async (req, res, next) => { 
 
   const product = await Product.findById(req.params.id);

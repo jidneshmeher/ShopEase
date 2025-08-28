@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as authService from "./authService";
+import { logger } from "../../utils/logger";
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -73,7 +74,7 @@ export const resetPasswordUser = createAsyncThunk(
     try {
       return await authService.resetPassword(token, password);
     } catch (error) {
-      console.log(error)
+      logger.log(error)
       return rejectWithValue(error.response?.data?.message || "Failed to reset password");
     }
   }
@@ -86,7 +87,12 @@ const authSlice = createSlice({
     loading: true,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    clearUser(state){
+      state.user = null;
+      localStorage.removeItem("isLoggedIn");
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -96,6 +102,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+        localStorage.setItem("isLoggedIn", "true");
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -135,6 +142,7 @@ const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.loading = false;
         state.user = null;
+        localStorage.removeItem("isLoggedIn");
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
@@ -180,4 +188,5 @@ const authSlice = createSlice({
   },
 });
 
+export const { clearUser } = authSlice.actions;
 export default authSlice.reducer;

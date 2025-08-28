@@ -2,12 +2,12 @@ import api from "../../services/api";
 
 export const login = async (email, password) => {
   const res = await api.post("/api/v1/auth/login", { email, password });
-  return res.data;
+  return res.data.data;
 };
 
 export const register = async (name, email, password, phone) => {
   const res = await api.post("/api/v1/auth/register", { name, email, password, phone});
-  return res.data;
+  return res.data.data;
 };
 
 export const getCurrentUser = async () => {
@@ -26,10 +26,10 @@ export const forgotPassword = async (email) => {
 
 export const resetPassword = async (token, password) => {
   const res = await api.put(`/api/v1/auth/reset-password/${token}`, { password });
-  return res.data;
+  return res.data.data;
 };
 
 export const updateUserProfile = async (userData) => {
   const res = await api.put('/api/v1/users/profile', userData, { withCredentials: true });
-  return res.data;
+  return res.data.data;
 };

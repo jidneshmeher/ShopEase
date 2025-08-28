@@ -17,8 +17,10 @@ function App() {
   gsap.registerPlugin(ScrollTrigger);
   
   useEffect(() => {
-    dispatch(fetchCurrentUser());
-  }, []);
+    if (localStorage.getItem("isLoggedIn")) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (user && user._id) {

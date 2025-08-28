@@ -111,6 +111,11 @@ export default function ProductDetails() {
   : null;
 
   const handleAddToCart = async () => {
+    if (!user) {
+      toast.error("Please log in to add items to cart");
+      return;
+    }
+    
     try {
       const data = await addToCart(product._id, 1);
       if (data.success) toast.success('Added to cart!');
@@ -201,11 +206,11 @@ export default function ProductDetails() {
               {discountPrice ? (
                 <>
                   <span className="text-2xl font-bold text-green-500">
-                    <sup className="font-sans">₹</sup>
+                    <span className="font-sans">₹</span>
                     {new Intl.NumberFormat("en-US").format(discountPrice)}
                   </span>
                   <span className="text-lg text-gray-500 line-through">
-                    <sup className="font-sans">₹</sup>
+                    <span className="font-sans">₹</span>
                     {new Intl.NumberFormat("en-US").format(product.price)}
                   </span>
                   <span className="text-sm font-semibold text-red-500">
@@ -214,7 +219,7 @@ export default function ProductDetails() {
                 </>
               ) : (
                 <span className="text-2xl font-semibold text-green-500">
-                  <sup className="font-sans">₹</sup>
+                  <span className="font-sans">₹</span>
                   {new Intl.NumberFormat("en-US").format(product.price)}
                 </span>
               )}
