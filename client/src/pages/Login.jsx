@@ -86,12 +86,12 @@ export default function Login() {
 
           <p className="text-sm text-center font-light text-gray-500 dark:text-gray-400">
             Don’t have an account yet?{" "}
-            <a
-              href="/register"
+            <Link
+              to="/register"
               className="font-medium text-[#2563eb] hover:underline dark:text-[#3b82f6]"
             >
               Sign up
-            </a>
+            </Link>
           </p>
         </form>
       </div>

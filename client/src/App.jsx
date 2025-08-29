@@ -15,14 +15,13 @@ function App() {
   const {user} = useAuth();
 
   gsap.registerPlugin(ScrollTrigger);
-  
+
   useEffect(() => {
-    if (localStorage.getItem("isLoggedIn")) {
       dispatch(fetchCurrentUser());
-    }
   }, [dispatch]);
 
   useEffect(() => {
+    console.log("FetchCart Called")
     if (user && user._id) {
       dispatch(fetchCartThunk());
     }

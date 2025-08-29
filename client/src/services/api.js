@@ -20,12 +20,18 @@ api.interceptors.response.use(
     const status = error.response?.status;
     const message = error.response?.data?.message;
 
+    const state = injectedStore?.getState();
+    const isAuthenticated = state?.auth?.isLoggedIn; 
+
     if (
       status === 401 &&
       message &&
       (message.toLowerCase().includes('token') || message.toLowerCase().includes('expired'))
     ) {
-      toast.error("Session expired, please log in again");
+      console.log("401 ERROR")
+      if(isAuthenticated){
+        toast.error("Session expired, please log in again");
+      }
       injectedStore?.dispatch(clearUser());
     }
 

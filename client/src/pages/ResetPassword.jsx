@@ -8,7 +8,7 @@ export default function ResetPassword() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token } = useParams();
-  const { loading, error, resetPasswordSuccess } = useSelector((state) => state.auth);
+  const { loading} = useSelector((state) => state.auth);
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

@@ -120,7 +120,8 @@ export default function ProductDetails() {
       const data = await addToCart(product._id, 1);
       if (data.success) toast.success('Added to cart!');
       else toast.error(data.message || 'Failed to add to cart');
-    } catch {
+    } catch(error) {
+      if (error.response?.status === 401) return;
       toast.error('Something went wrong!');
     }
   };
