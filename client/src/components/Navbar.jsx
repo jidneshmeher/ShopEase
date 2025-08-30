@@ -8,7 +8,7 @@ import { FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { LuCircleUserRound } from "react-icons/lu";
 import { logger } from "../utils/logger";
 
-export default function Navbar(){
+export default function Navbar() {
   const dispatch = useDispatch();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -33,27 +33,21 @@ export default function Navbar(){
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <header className="header h-16 flex justify-between items-center px-4 sm:px-16 border-b border-gray-200 sticky top-0 bg-white z-50 shadow-sm">
-      {/* Logo */}
       <div className="logo font-bold text-xl text-black">
         <Link to="/">SHOPEASE</Link>
       </div>
 
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex space-x-8 text-base font-semibold">
+      <nav className="hidden lg:flex space-x-8 text-base font-semibold">
         <NavLink
           to="/products"
           className={({ isActive }) =>
@@ -86,9 +80,7 @@ export default function Navbar(){
         </NavLink>
       </nav>
 
-      {/* Right Side */}
       <div className="flex items-center space-x-4 relative" ref={dropdownRef}>
-        {/* Cart */}
         <Link
           to="/cart"
           className="relative text-gray-900 hover:text-black"
@@ -98,7 +90,6 @@ export default function Navbar(){
           <FiShoppingCart size={24} />
         </Link>
 
-        {/* User Menu / Login */}
         {user ? (
           <>
             <button
@@ -141,20 +132,19 @@ export default function Navbar(){
                   Logout
                 </button>
               </div>
-            )}
+            )}  
           </>
         ) : (
           <Link
             to="/login"
-            className="hidden md:inline-block bg-blue-600 text-white font-semibold text-base rounded-3xl px-6 py-2 hover:bg-blue-700 transition"
+            className="hidden lg:inline-block bg-blue-600 text-white font-semibold text-base rounded-3xl px-6 py-2 hover:bg-blue-700 transition"
           >
             LOGIN
           </Link>
         )}
 
-        {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-gray-900 hover:text-black"
+          className="lg:hidden text-gray-900 hover:text-black"
           onClick={() => setMobileMenuOpen((prev) => !prev)}
           aria-label="Mobile menu"
         >
@@ -162,17 +152,14 @@ export default function Navbar(){
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <nav className="absolute top-full left-0 w-full bg-white border-t border-gray-200 shadow-md md:hidden z-40">
-          <div className="flex flex-col px-4 py-4 space-y-2">
+        <nav className="absolute top-full left-0 w-full bg-white border-t border-gray-200 shadow-md lg:hidden z-40">
+          <div className="flex flex-col px-16 py-4 space-y-2">
             <NavLink
               to="/products"
               onClick={() => setMobileMenuOpen(false)}
               className={({ isActive }) =>
-                isActive
-                  ? "text-black font-semibold"
-                  : "text-gray-900 hover:text-black"
+                isActive ? "text-black font-semibold" : "text-gray-900 hover:text-black "
               }
             >
               PRODUCTS
@@ -181,9 +168,7 @@ export default function Navbar(){
               to="/about"
               onClick={() => setMobileMenuOpen(false)}
               className={({ isActive }) =>
-                isActive
-                  ? "text-black font-semibold"
-                  : "text-gray-900 hover:text-black"
+                isActive ? "text-black font-semibold" : "text-gray-900 hover:text-black "
               }
             >
               ABOUT US
@@ -192,9 +177,7 @@ export default function Navbar(){
               to="/contact"
               onClick={() => setMobileMenuOpen(false)}
               className={({ isActive }) =>
-                isActive
-                  ? "text-black font-semibold"
-                  : "text-gray-900 hover:text-black"
+                isActive ? "text-black font-semibold" : "text-gray-900 hover:text-black "
               }
             >
               CONTACT
@@ -213,4 +196,4 @@ export default function Navbar(){
       )}
     </header>
   );
-};
+}

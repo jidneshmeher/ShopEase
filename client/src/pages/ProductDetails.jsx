@@ -165,10 +165,10 @@ export default function ProductDetails() {
 
   return (
     <>
-      <section className="w-full px-16 pt-10 min-h-[calc(100vh-64px)]">
-        <div className="flex flex-col md:flex-row gap-20 justify-between">
-          <div className="md:w-1/2 flex gap-4">
-            <div className="flex flex-col gap-2 w-28">
+      <section className="w-full px-4 sm:px-16 pt-10 min-h-[calc(100vh-64px)]">
+        <div className="flex flex-col lg:flex-row gap-20 justify-between">
+          <div className="lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4">
+            <div className="flex items-center lg:flex-col gap-2 flex-shrink-0 overflow-x-auto lg:overflow-y-auto max-h-[500px] lg:w-28">
               {product.images?.map((img, idx) => (
                 <img
                   key={idx}
@@ -185,7 +185,7 @@ export default function ProductDetails() {
                 <img
                   src={selectedImage}
                   alt={product.name}
-                  className="w-full h-auto object-contain rounded border border-gray-300"
+                  className="min-h-[400px] lg:w-auto lg:h-auto object-contain"
                 />
               ) : (
                 <div className="w-full h-96 bg-gray-200 flex items-center justify-center rounded">
@@ -195,7 +195,7 @@ export default function ProductDetails() {
             </div>
           </div>
 
-          <div className="md:w-5/12 flex flex-col grow gap-3">
+          <div className="lg:w-5/12 flex flex-col grow gap-3">
             <h1 className="text-3xl font-semibold">{product.name}</h1>
             <div className='flex items-center space-x-2'>
               <Rating rating={avgRating}/>
@@ -203,7 +203,7 @@ export default function ProductDetails() {
             </div>
             <p className="text-black">{product.description}</p>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-x-4 flex-wrap">
               {discountPrice ? (
                 <>
                   <span className="text-2xl font-bold text-green-500">
@@ -224,9 +224,9 @@ export default function ProductDetails() {
                   {new Intl.NumberFormat("en-US").format(product.price)}
                 </span>
               )}
-            
+              <span className="hidden sm:inline text-gray-400">|</span>
               {product.stock > 0 ? (
-                <span className="text-black">| Stock: {product.stock}</span>
+                <span className="text-black">Stock: {product.stock}</span>
               ) : (
                 <span className="text-red-500 font-semibold">| Out of Stock</span>
               )}
@@ -297,7 +297,7 @@ export default function ProductDetails() {
         </div>
       </section>
 
-      <section className="w-full px-16 mt-10">
+      <section className="w-full px-4 sm:px-16 mt-10">
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
           <h1 className="text-3xl mb-4 sm:mb-0">Customer Reviews</h1>
           {user && !userReview && (
@@ -320,53 +320,54 @@ export default function ProductDetails() {
 
         {/* Review Summary */}
         <section className="mb-8">
-          <div className="w-full mx-auto flex flex-col sm:flex-row sm:space-x-12 shadow-md rounded-md p-6">
-            {/* Total Reviews */}
-            <div className="flex-1 border-r border-gray-200 pr-6 mb-6 sm:mb-0">
+          <div className="w-full mx-auto flex flex-col lg:flex-row lg:space-x-12 shadow-md rounded-md p-6">
+            <div className="flex-1 lg:border-b-0 lg:border-r border-gray-200 pr-0 lg:pr-6 mb-6 lg:mb-0">
               <p className="text-lg text-gray-900 font-normal mb-1">Total Reviews</p>
               <div className="flex items-center space-x-3">
                 <p className="text-3xl font-extrabold text-gray-900">{totalReviews}</p>
               </div>
             </div>
-
-            {/* Average Rating */}
-            <div className="flex-1 border-r border-gray-200 pr-6 mb-6 sm:mb-0">
+            <div className="flex-1 lg:border-b-0 lg:border-r border-gray-200 pr-0 lg:pr-6 mb-6 lg:mb-0">
               <p className="text-lg text-gray-900 font-normal mb-1">Average Rating</p>
               <div className="flex items-center space-x-2">
                 <p className="text-3xl font-extrabold text-gray-900">{avgRating.toFixed(1)}</p>
                 <Rating rating={avgRating} />
               </div>
             </div>
-
-            {/* Rating Bars */}
             <div className="flex-1 flex flex-col justify-center space-y-2">
-              {starPercentages.map(s => {
+              {starPercentages.map((s) => {
                 const widthPercent = s.percent;
                 const finalWidth = widthPercent === 0 ? 2 : widthPercent;
                 return (
-                  <div key={s.star} className="flex items-center space-x-2 text-xs font-semibold text-gray-900">
-                    <span className="w-4 text-sm flex justify-end">{s.star}</span>
-                    <FaStar className="text-[10px] text-yellow-400" />
-                    <div
-                      className={`h-2 rounded ${barColors[s.star]}`}
-                      style={{ width: `${finalWidth}%` }}
-                    ></div>
-                    <span className="w-10 ">{s.count}</span>
+                  <div
+                    key={s.star}
+                    className="flex items-center text-xs sm:text-sm font-semibold text-gray-900"
+                  >
+                    <div className="flex items-center space-x-1 w-12 sm:w-14 flex-shrink-0">
+                      <span className="text-sm sm:text-base flex justify-end">{s.star}</span>
+                      <FaStar className="text-[10px] sm:text-[12px] text-yellow-400" />
+                    </div>
+                    <div className="flex-1 h-2 sm:h-3 rounded bg-gray-200 mr-2 relative">
+                      <div
+                        className={`h-2 sm:h-3 rounded ${barColors[s.star]} absolute top-0 left-0`}
+                        style={{ width: `${finalWidth}%` }}
+                      ></div>
+                    </div>
+                
+                    <span className="w-10 text-right">{s.count}</span>
                   </div>
                 );
               })}
             </div>
           </div>
         </section>
-
+        
         {/* Review Form */}
         {showReviewForm && (
           <div className="my-5 border border-gray-300 p-4 rounded w-full">
             <h3 className="font-semibold mb-2">
               {isEditing ? "Edit Your Review" : "Your Review"}
             </h3>
-
-            {/* Star rating */}
             <div className="flex space-x-1 mb-2">
               {[1, 2, 3, 4, 5].map(star => (
                 <span
@@ -378,8 +379,6 @@ export default function ProductDetails() {
                 </span>
               ))}
             </div>
-              
-            {/* Textarea */}
             <textarea
               className="w-full border border-gray-300 rounded p-2 mb-2"
               rows={3}
@@ -387,18 +386,15 @@ export default function ProductDetails() {
               value={userComment}
               onChange={(e) => setUserComment(e.target.value)}
             />
-
-            {/* Action buttons */}
-            <div className="flex space-x-3">
+            <div className="flex gap-x-3 gap-y-3 sm:gap-y-0 flex-wrap">
               <button
                 className="bg-blue-600 text-white font-semibold text-base px-6 py-2 rounded hover:bg-blue-700 text-center"
                 onClick={handleSubmitReview}
               >
                 {isEditing ? "Update Review" : "Submit Review"}
               </button>
-              
               <button
-                className="border border-gray-400 text-gray-700 px-4 py-2 rounded hover:bg-gray-100"
+                className="border border-gray-400 text-gray-700 px-6 py-2 rounded hover:bg-gray-100"
                 onClick={() => {
                   setShowReviewForm(false);
                   setIsEditing(false);      
@@ -411,7 +407,7 @@ export default function ProductDetails() {
             </div>
           </div>
         )}
-
+        
          {/* Your Review Section */}
          {userReview && !isEditing && (
           <section className="mb-8">
@@ -445,8 +441,6 @@ export default function ProductDetails() {
                   setUserComment(rev.comment);
                 }}
               />
-
-        
             ))
           ) : (
             <p className="text-gray-600">No reviews yet</p>

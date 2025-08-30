@@ -172,7 +172,7 @@ export default function Checkout() {
           <section className="px-4 py-6 bg-white rounded-lg shadow space-y-6">
             <h2 className="text-xl font-semibold">Contact Details</h2>
             <form className="space-y-4 mt-3">
-              <div>
+              <div className="w-full min-w-0">
                 <label className="block text-gray-700 font-medium mb-1">Phone Number</label>
                 <PhoneInput
                   country={"in"}
@@ -182,11 +182,11 @@ export default function Checkout() {
                   }
                   enableSearch={true}
                   countryCodeEditable={false}
+                  inputClass="!w-48"
                 />
               </div>
             </form>
           </section>
-
           {/* Delivery Section */}
           <section className="px-4 py-6 bg-white rounded-lg shadow space-y-6">
             <h2 className="text-xl font-semibold">Delivery Details</h2>
@@ -272,7 +272,7 @@ export default function Checkout() {
         </div>
 
         {/* Order Summary */}
-        <div className="w-full lg:w-1/3 p-6 pt-0 mt-6 lg:mt-0 rounded shadow flex flex-col justify-between h-max text-gray-900">
+        <div className="w-full lg:w-1/3 p-6 pt-0 mt-6 lg:mt-0 rounded shadow flex flex-col justify-between h-max text-gray-900 order-first lg:order-last">
           <h3 className="text-2xl font-bold mb-6 py-2">Order Summary</h3>
           {cartItems.length === 0 ? (
             <p className="text-center text-gray-500 mt-6">Your cart is empty.</p>
@@ -289,7 +289,7 @@ export default function Checkout() {
                         {product.discount ? (
                           <>
                             <span className="line-through text-gray-500 mr-2">₹{product.price.toLocaleString()}</span>
-                            <span className="text-green-600">₹{price.toLocaleString()}</span>
+                            <span className="text-green-600 inline-flex">₹{price.toLocaleString()}</span>
                           </>
                         ) : (
                           <>₹{price.toLocaleString()}</>
@@ -304,7 +304,6 @@ export default function Checkout() {
                 );
               })}
 
-              {/* Subtotal, Shipping, Total */}
               <div className="mt-2 pt-4 space-y-2">
                 <p className="flex justify-between text-lg">
                   <span>Subtotal</span>

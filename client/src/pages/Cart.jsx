@@ -77,9 +77,9 @@ export default function Cart() {
   };
 
   return (
-    <div className="flex md:flex-row flex-col gap-8 p-8 px-20 bg-white min-h-screen">
+    <div className="flex lg:flex-row flex-col gap-8 sm:p-8 bg-white min-h-screen">
       {/* Cart Items */}
-      <div className="md:w-2/3 space-y-6 p-6">
+      <div className="lg:w-2/3 space-y-6 p-6">
         <h3 className="text-2xl font-bold mb-6 border-b py-2">Your Cart</h3>
 
         {items.length === 0 ? (
@@ -93,15 +93,15 @@ export default function Cart() {
               : product.price;
 
             return (
-              <div key={product._id} className="flex gap-4 border-b pb-4">
-                <img src={product.images?.[0]} alt={product.name} className="w-44 h-44 object-cover rounded" />
+              <div key={product._id} className="flex flex-col mt-2 sm:flex-row sm:items-center gap-4 border-b pb-4">
+                <img src={product.images?.[0]} alt={product.name} className="w-44 h-44 object-cover rounded self-center sm:self-start" />
                 <div className="flex-1">
-                  <div className='flex items-center justify-between'>
+                  <div className='sm:flex items-center justify-between'>
                     <h2 className="font-bold text-lg text-gray-900">{product.name}</h2>
-                    <p className="text-gray-900 font-bold text-lg">
+                    <p className="text-gray-900 font-medium sm:font-bold text-lg">
                       {product.discount ? (
                         <>
-                          <span className="text-gray-900 font-bold text-lg">₹{discountPrice.toLocaleString()}</span>
+                          <span className="text-gray-900 sm:font-bold text-lg">₹{discountPrice.toLocaleString()}</span>
                         </>
                       ) : (
                         <>₹{product.price.toLocaleString()}</>
@@ -115,14 +115,14 @@ export default function Cart() {
                     <p className="text-red-500 font-semibold mt-1">Out of Stock</p>
                   )}
 
-                  <div className="mt-2 flex items-center gap-2">
+                  <div className="mt-2 flex items-center gap-2 flex-wrap">
                     <label className="mr-2">Qty:</label>
                     <div className="flex items-center gap-2">
                       {quantity > 1 ? (
                         <button
                           onClick={() => handleQuantityChange(product._id, quantity - 1, product.stock)}
                           disabled={isUpdating || isRemoving || product.stock === 0}
-                          className={`px-2 py-1 border rounded ${isUpdating || isRemoving || product.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
+                          className={`flex-shrink-0 px-2 py-1 border rounded ${isUpdating || isRemoving || product.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
                         >
                           <img src={removeIcon} alt="Remove" className="w-5 h-5" />
                         </button>
@@ -130,7 +130,7 @@ export default function Cart() {
                         <button
                           onClick={() => handleRemove(product._id)}
                           disabled={isRemoving || isUpdating}
-                          className={`px-2 py-1 border rounded text-red-600 hover:bg-red-100 ${isRemoving ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          className={`flex-shrink-0 px-2 py-1 border rounded text-red-600 hover:bg-red-100 ${isRemoving ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                           <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
                         </button>
@@ -146,7 +146,7 @@ export default function Cart() {
                       <button
                         onClick={() => handleQuantityChange(product._id, quantity + 1, product.stock)}
                         disabled={isUpdating || isRemoving || product.stock === 0}
-                        className={`px-2 py-1 border rounded ${isUpdating || isRemoving || product.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
+                        className={`flex-shrink-0 px-2 py-1 border rounded ${isUpdating || isRemoving || product.stock === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
                       >
                         <img src={addIcon} alt="Add" className="w-5 h-5" />
                       </button>
@@ -168,7 +168,7 @@ export default function Cart() {
       </div>
 
       {/* Order Summary */}
-      <div className="md:w-1/3 p-6 pt-0 mt-6 rounded shadow flex flex-col justify-between h-max text-gray-900" >
+      <div className="lg:w-1/3 p-6 pt-0 mt-6 rounded shadow flex flex-col justify-between h-max text-gray-900" >
         <div>
           <h3 className="text-2xl font-bold mb-6 py-2">Order Summary</h3>
           <p className="text-lg flex justify-between">

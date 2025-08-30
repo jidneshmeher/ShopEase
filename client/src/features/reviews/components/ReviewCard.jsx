@@ -98,7 +98,7 @@ export default function ReviewCard({ review, onDeleted, onEdit }) {
           : `${formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}`}
       </p>
 
-      <div className="flex items-center gap-4 mt-3">
+      <div className="flex flex-wrap items-center gap-4 mt-3">
           <button className="flex items-center gap-1 text-gray-900 text-base hover:text-green-600">
             <LuThumbsUp className="w-4 h-4" /> Helpful (0)
           </button>
