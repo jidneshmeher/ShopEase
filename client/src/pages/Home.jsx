@@ -45,33 +45,33 @@ export default function Home(){
   const headingRef = useRef(null);
   const container = useRef(null);
 
-  useGSAP(() => {
-    gsap.from(headingRef.current, {
-      y: 70,
-      opacity:0.2,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: headingRef.current,
-        start: "top 80%",
-      },
-    });
-  }, []);
+  // useGSAP(() => {
+  //   gsap.from(headingRef.current, {
+  //     y: 70,
+  //     opacity:0.2,
+  //     duration: 0.8,
+  //     scrollTrigger: {
+  //       trigger: headingRef.current,
+  //       start: "top 80%",
+  //     },
+  //   });
+  // }, []);
 
-  useGSAP(() => {
-    const cards = container.current.querySelectorAll(".card");
+  // useGSAP(() => {
+  //   const cards = container.current.querySelectorAll(".card");
   
-    cards.forEach((card, index) => {
-      gsap.from(card, {
-        x: index % 2 === 0 ? -500 : 500,
-        opacity: 0.2,
-        duration: 1,
-        scrollTrigger: {
-          trigger: card,
-          start: "top 85%",
-        },
-      });
-    });
-  }, [], container);
+  //   cards.forEach((card, index) => {
+  //     gsap.from(card, {
+  //       x: index % 2 === 0 ? -500 : 500,
+  //       opacity: 0.2,
+  //       duration: 1,
+  //       scrollTrigger: {
+  //         trigger: card,
+  //         start: "top 85%",
+  //       },
+  //     });
+  //   });
+  // }, [], container);
   
 
   return (

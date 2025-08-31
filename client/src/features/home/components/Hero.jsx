@@ -9,22 +9,22 @@ export default function Hero() {
   const headingRef = useRef(null);
   const buttonRef = useRef(null);
 
-  useGSAP(() => {
-    gsap.from(headingRef.current, {
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      delay: 0.8,
-      ease: "power2.out",
-    });
-    // gsap.from(buttonRef.current, {
-    //   y: 30,
-    //   opacity: 0,
-    //   duration: 0.8,
-    //   delay: 1,
-    //   ease: "power2.out",
-    // });
-  }, []);
+  // useGSAP(() => {
+  //   gsap.from(headingRef.current, {
+  //     y: 50,
+  //     opacity: 0,
+  //     duration: 0.8,
+  //     delay: 0.8,
+  //     ease: "power2.out",
+  //   });
+  //   // gsap.from(buttonRef.current, {
+  //   //   y: 30,
+  //   //   opacity: 0,
+  //   //   duration: 0.8,
+  //   //   delay: 1,
+  //   //   ease: "power2.out",
+  //   // });
+  // }, []);
 
   return (
     <section 
@@ -41,19 +41,19 @@ export default function Hero() {
       <div 
         ref={headingRef} 
         className="absolute z-20 flex w-fit flex-col gap-4 text-left 
-        bottom-4 left-4 lg:left-12 lg:top-1/2 md:-translate-y-1/2"
+        bottom-4 left-4 lg:left-12 md:top-1/2 md:-translate-y-1/2"
       >
-        <div className="flex flex-col gap-0 max-md:items-start w-full max-w-full px-4 sm:px-6 md:px-12">
-          <p className="m-0 overflow-hidden text-white text-[8vw] sm:text-[6vw] md:text-[5vw] lg:text-[115px] leading-[1.1] font-playfair tracking-wide break-words whitespace-normal">
+        <div className="flex flex-col gap-0 max-md:items-start w-full max-w-1/2 px-4 sm:px-6 md:px-12">
+          <p className="m-0 overflow-hidden text-white text-[40px] sm:text-[75px] md:text-[90px] lg:text-[115px] leading-[1.1] font-playfair tracking-wide break-words whitespace-normal">
             <span className="block animate-appear-from-bottom">FIND</span>
           </p>
-          <p className="m-0 overflow-hidden text-white text-[8vw] sm:text-[6vw] md:text-[5vw] lg:text-[115px] leading-[1.1] font-playfair tracking-wide break-words whitespace-normal">
+          <p className="m-0 overflow-hidden text-white text-[40px] sm:text-[75px] md:text-[90px] lg:text-[115px] leading-[1.1] font-playfair tracking-wide break-words whitespace-normal">
             <span className="block animate-appear-from-bottom">THE BEST</span>
           </p>
-          <p className="m-0 overflow-hidden text-white text-[8vw] sm:text-[6vw] md:text-[5vw] lg:text-[115px] leading-[1.1] font-playfair tracking-wide break-words whitespace-normal">
+          <p className="m-0 overflow-hidden text-white text-[40px] sm:text-[75px] md:text-[90px] lg:text-[115px] leading-[1.1] font-playfair tracking-wide break-words whitespace-normal">
             <span className="block animate-appear-from-bottom">DEALS ON</span>
           </p>
-          <p className="m-0 overflow-hidden text-white text-[8vw] sm:text-[6vw] md:text-[5vw] lg:text-[115px] leading-[1.1] font-playfair tracking-wide min-w-[50%] sm:min-w-[60%] md:min-w-[80%] break-words whitespace-normal">
+          <p className="m-0 overflow-hidden text-white text-[40px] sm:text-[75px] md:text-[90px] lg:text-[115px] leading-[1.1] font-playfair tracking-wide min-w-[50%] sm:min-w-[60%] md:min-w-[80%] break-words whitespace-normal">
             <span className="block animate-appear-from-bottom">
               <Typewriter words={['MOBILES', 'LAPTOPS', 'HEADPHONES', 'WATCHES']} />
             </span>
@@ -61,14 +61,6 @@ export default function Hero() {
         </div>
 
       </div>
-
-      {/* <Link
-        to="/products"
-        ref={buttonRef}
-        className="absolute top-[72%] left-12 bg-blue-600 font-semibold text-lg text-white px-10 py-3 rounded-3xl hover:bg-blue-700"
-      >
-        Shop Now
-      </Link> */}
     </section>
   );
 };

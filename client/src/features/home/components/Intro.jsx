@@ -5,17 +5,17 @@ import { useGSAP } from "@gsap/react";
 export default function Intro(){
   const containerRef = useRef(null);
 
-  useGSAP(() => {
-    gsap.from(containerRef.current.querySelectorAll("h1, h2, p"), {
-      y: 70,
-      opacity: 0.2,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: ".intro-section",
-        start: "top 80%",
-      },
-    });
-  }, []);
+  // useGSAP(() => {
+  //   gsap.from(containerRef.current.querySelectorAll("h1, h2, p"), {
+  //     y: 70,
+  //     opacity: 0.2,
+  //     duration: 0.8,
+  //     scrollTrigger: {
+  //       trigger: ".intro-section",
+  //       start: "top 80%",
+  //     },
+  //   });
+  // }, []);
 
   return (
     <section

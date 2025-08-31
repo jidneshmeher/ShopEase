@@ -103,34 +103,37 @@ export default function Products() {
   const totalPages = Math.max(Math.ceil(total / limit), 1);
 
   return (
-    <section className="text-black px-6 min-h-screen">
-      <CategoryNav
-        categories={categories}
-        filters={filters}
-        onChange={handleFilterChange}
-      />
-      <FilterBar
-        brands={brands}
-        filters={filters}
-        total={total}
-        onChange={handleFilterChange}
-      />
+    <section className="text-black px-4 lg:px-16 min-h-screen">
+  <CategoryNav
+    categories={categories}
+    filters={filters}
+    onChange={handleFilterChange}
+  />
+  <FilterBar
+    brands={brands}
+    filters={filters}
+    total={total}
+    onChange={handleFilterChange}
+  />
 
-      {products.length === 0 ? (
-        <p className="text-center col-span-full mt-10">No products found.</p>
-      ) : (
-        <div className="px-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 gap-y-12">
-          {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-      )}
+  {products.length === 0 ? (
+    <p className="text-center col-span-full mt-10">No products found.</p>
+  ) : (
+    <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+      {products.map((product) => (
+        <ProductCard key={product._id} product={product} />
+      ))}
+    </div>
+  )}
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
-    </section>
+  <div className="mt-10">
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={handlePageChange}
+    />
+  </div>
+</section>
+
   );
 }

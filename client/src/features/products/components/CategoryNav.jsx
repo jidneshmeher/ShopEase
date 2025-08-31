@@ -1,7 +1,7 @@
 export default function CategoryNav({ categories = [], filters={}, onChange }) {
   return (
     <div className="w-full top-16 bg-white shadow-sm border-b">
-      <div className="flex items-center justify-center space-x-10 px-16 py-3 overflow-x-auto scrollbar-hide">
+      <div className="flex text-lg sm:text-base flex-col sm:flex-row items-center justify-center sm:space-x-10 px-16 py-3">
         {categories.map((cat) => (
           <button
             key={cat}

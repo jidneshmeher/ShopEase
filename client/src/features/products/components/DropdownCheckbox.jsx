@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-// import { IoClose } from "react-icons/io5"; 
-// import { logger } from "../../../utils/logger";
 
 export default function DropdownCheckbox({
   label,
@@ -16,12 +14,23 @@ export default function DropdownCheckbox({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
         setOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    if (window.innerWidth >= 1024) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      if (window.innerWidth >= 1024) {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
+    };
   }, []);
 
   const handleToggle = (option) => {
@@ -32,54 +41,48 @@ export default function DropdownCheckbox({
       newValue = [...value, option];
     }
     onChange(newValue);
-    setOpen(false);
+
+    if (window.innerWidth >= 1024) {
+      setOpen(false);
+    }
   };
 
-  // const handleRemove = (option) => {
-  //   onChange(value.filter((v) => v !== option));
-  // };
-
-  // const handleClear = () => {
-  //   onChange([]);
-  // };
-
   return (
-    <div className={`relative mr-6 inline-block ${className}`} ref={dropdownRef}>
-      {/* Dropdown trigger */}
+    <div className={`relative border-b lg:border-none p-5 lg:p-0 inline-block ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        className="flex items-center py-2"
+        className="flex items-center justify-between w-full lg:py-2 text-sm sm:text-base"
         onClick={() => setOpen((prev) => !prev)}
       >
-        <span className="font-semibold">
+        <span className="font-semibold text-xl lg:text-base">
           {label} {value.length > 0 && `(${value.length})`}
         </span>
         {open ? (
-          <FaChevronUp className="ml-1 text-gray-600 size-2" />
+          <FaChevronUp className="ml-1 text-gray-600 size-3" />
         ) : (
-          <FaChevronDown className="ml-1 text-gray-600 size-2" />
+          <FaChevronDown className="ml-1 text-gray-600 size-3" />
         )}
       </button>
 
-      {/* Dropdown options */}
-      {open && (
+      {open && (  
         <div
-          className={`absolute top-full mt-1 bg-white border border-gray-200 shadow-lg rounded-md p-4 z-50
-          ${align === "right" ? "right-0" : "left-0"}
-          ${
-            options.length > 10
-              ? "grid grid-cols-3 gap-x-5 gap-y-5 w-screen max-w-[1024px]"
-              : "flex flex-col space-y-3 min-w-[200px]"
-          }`}
+        className={`
+          mt-2 bg-white lg:border lg:border-gray-200 lg:shadow-lg rounded-md py-5 lg:p-3
+          ${ options.length > 10
+              ? "grid grid-cols-2 lg:grid-cols-3 gap-3 w-full lg:w-[640px] lg:max-w-[1024px]"
+              : "flex flex-col space-y-2 min-w-[200px] max-h-[60vh] overflow-y-auto"
+          }
+          lg:absolute lg:top-full lg:z-50
+        `}
         >
           {options.map((opt) => (
             <label
               key={opt}
-              className="flex items-center space-x-2 text-sm font-normal text-gray-900 cursor-pointer"
+              className="flex items-center space-x-2 text-base lg:text-sm font-normal text-gray-900 cursor-pointer"
             >
               <input
                 type="checkbox"
-                className="w-5 h-5 border-gray-300 rounded shrink-0"
+                className="w-4 h-4 border-gray-300 rounded shrink-0"
                 checked={value.includes(opt)}
                 onChange={() => handleToggle(opt)}
               />
@@ -88,31 +91,6 @@ export default function DropdownCheckbox({
           ))}
         </div>
       )}
-
-      {/* Selected chips */}
-      {/* {value.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {value.map((val) => (
-            <span
-              key={val}
-              className="flex items-center px-3 py-1 bg-gray-100 text-sm rounded-full border border-gray-300"
-            >
-              <IoClose
-                className="mr-1 cursor-pointer text-gray-600"
-                onClick={() => handleRemove(val)}
-              />
-              {val}
-            </span>
-          ))}
-
-          <button
-            onClick={handleClear}
-            className="text-sm text-blue-600 hover:underline ml-2"
-          >
-            Clear All
-          </button>
-        </div>
-      )} */}
     </div>
   );
 }
