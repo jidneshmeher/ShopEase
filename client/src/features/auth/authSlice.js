@@ -90,7 +90,6 @@ const authSlice = createSlice({
   },
   reducers: {
     clearUser(state){
-      console.log("clearUser Called")
       state.user = null
       state.isLoggedIn = false
     }

@@ -28,7 +28,6 @@ api.interceptors.response.use(
       message &&
       (message.toLowerCase().includes('token') || message.toLowerCase().includes('expired'))
     ) {
-      console.log("401 ERROR")
       if(isAuthenticated){
         toast.error("Session expired, please log in again");
       }

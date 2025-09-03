@@ -1,42 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { createRazorpayOrder, verifyRazorpayPayment } from '../checkoutService.js';
 import Processing from './Processing.jsx';
-import {logger} from "../../../utils/logger.js"
+import { logger } from "../../../utils/logger.js";
 
-export default function PaymentWithRazorpay({ orderData, onPaymentSuccess, onPaymentError, validateForm }){
+export default function PaymentWithRazorpay({ orderData, onPaymentSuccess, onPaymentError, validateForm }) {
   const [loading, setLoading] = useState(false);
-  const [scriptLoaded, setScriptLoaded] = useState(false);
-
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      if (document.getElementById('razorpay-script')) {
-        resolve(true);
-        return;
-      }
-      const script = document.createElement('script');
-      script.id = 'razorpay-script';
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
-
-  useEffect(() => {
-    loadRazorpayScript().then((loaded) => {
-      setScriptLoaded(loaded);
-      if (!loaded) {
-        onPaymentError('Failed to load Razorpay script');
-      }
-    });
-  }, [onPaymentError]);
 
   const handlePayment = async () => {
     if (!validateForm()) return;
-    if (!scriptLoaded) {
-      onPaymentError('Payment script not loaded');
-      return;
-    }
 
     setLoading(true);
 
@@ -97,7 +68,7 @@ export default function PaymentWithRazorpay({ orderData, onPaymentSuccess, onPay
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (err) {
-      logger.log(err)
+      logger.log(err);
       setLoading(false);
       onPaymentError('Payment initiation failed');
     }
@@ -105,16 +76,14 @@ export default function PaymentWithRazorpay({ orderData, onPaymentSuccess, onPay
 
   return (
     <>
-    <button
-      onClick={handlePayment}
-      disabled={loading}
-      className="mt-6 w-full rounded-md px-6 py-3 font-medium text-white bg-gray-900 hover:bg-black"
-    >
-      {loading ? 'Processing...' : 'Place Order'}
-    </button>
-    <Processing visible={loading} />
+      <button
+        onClick={handlePayment}
+        disabled={loading}
+        className="mt-6 w-full rounded-md px-6 py-3 font-medium text-white bg-gray-900 hover:bg-black"
+      >
+        {loading ? 'Processing...' : 'Place Order'}
+      </button>
+      <Processing visible={loading} />
     </>
   );
-};
-
-
+}

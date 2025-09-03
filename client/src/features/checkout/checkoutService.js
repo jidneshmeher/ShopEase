@@ -1,6 +1,7 @@
 import api from '../../services/api';
 
 export const createRazorpayOrder = async (orderData) => {
+  console.log(orderData)
   const res = await api.post('/api/v1/payments/create-order', orderData, { withCredentials: true });
   return res.data;
 };

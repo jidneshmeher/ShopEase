@@ -21,7 +21,6 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("FetchCart Called")
     if (user && user._id) {
       dispatch(fetchCartThunk());
     }

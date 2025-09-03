@@ -32,6 +32,9 @@ app.use('/api/v1/reviews', reviewRoutes);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/contact', contactRoutes);
 
+app.get('/health', (req, res) => {
+  res.status(200).send('Server is alive');
+});
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
