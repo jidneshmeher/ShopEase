@@ -19,7 +19,9 @@ if (process.env.NODE_ENV === "production") {
   cron.schedule("*/14 * * * *", async () => {
     try {
       const res = await fetch(`${process.env.BACKEND_URL}/health`);
-      console.log(`Health ping status: ${res.status}`);
+      if (!res.ok) {
+        console.error("Health ping failed, status:", res.status);
+      }
     } catch (err) {
       console.error("Health ping failed:", err);
     }
