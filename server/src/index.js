@@ -17,6 +17,7 @@ app.listen(port , () => {
 
 if (process.env.NODE_ENV === "production") {
   cron.schedule("*/14 * * * *", async () => {
+    console.log("Cron job triggered: Pinging /health...");
     try {
       const res = await fetch(`${process.env.BACKEND_URL}/health`);
       if (!res.ok) {
