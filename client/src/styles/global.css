@@ -37,3 +37,19 @@ body {
 .toggle-checkbox:checked::before {
   transform: translateX(20px);
 }
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #e3e3e3 0%,
+    #f0f0f0 50%,
+    #e3e3e3 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}

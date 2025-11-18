@@ -7,11 +7,13 @@ import * as productService from "../features/products/productService";
 import { logger } from "../utils/logger";
 import CategoryNav from "../features/products/components/CategoryNav";
 import { sanitizeFilters } from "../utils/sanitizeFilters";
+import ProductCardShimmer from "../features/products/components/ProductCardShimmer";
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
   const limit = 6;
 
   const [categories, setCategories] = useState([]);
@@ -67,6 +69,7 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const data = await productService.fetchProducts({
           page: currentPage,
           limit,
@@ -77,6 +80,9 @@ export default function Products() {
         window.scrollTo({ top: 0, behavior: "smooth" });
       } catch (error) {
         logger.error("Failed to load products", error);
+      }finally {
+        setLoading(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     };
     fetchProducts();
@@ -116,15 +122,14 @@ export default function Products() {
     onChange={handleFilterChange}
   />
 
-  {products.length === 0 ? (
-    <p className="text-center col-span-full mt-10">No products found.</p>
-  ) : (
-    <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
-      {products.map((product) => (
-        <ProductCard key={product._id} product={product} />
-      ))}
-    </div>
-  )}
+  <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+    {loading
+      ? [...Array(6)].map((_, i) => <ProductCardShimmer key={i} />)
+      : products.length === 0
+        ? <p className="text-center col-span-full mt-10">No products found.</p>
+        : products.map((product) => <ProductCard key={product._id} product={product} />)
+    }
+  </div>
 
   <div className="mt-10">
     <Pagination
